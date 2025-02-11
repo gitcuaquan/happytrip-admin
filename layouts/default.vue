@@ -29,7 +29,7 @@ const data = {
   user: {
     name: "Quân Tạ",
     email: "quan@example.com",
-    avatar: "/avatars/shadcn.jpg",
+    avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWrLzlCvzW9PJ6RDf_dUMIeG2khQ6zFGKXFw&s",
   },
   navMain: [
     {
@@ -95,10 +95,6 @@ const data = {
           url: "#",
         },
         {
-          title: "Hãng xe",
-          url: "#",
-        },
-        {
           title: "Cộng tác viên",
           url: "#",
         },
@@ -122,6 +118,10 @@ const data = {
           url: "#",
         },
         {
+          title: "Hãng xe",
+          url: "#",
+        },
+        {
           title: "Bảng giá",
           url: "#",
         },
@@ -131,7 +131,7 @@ const data = {
   projects: [
     {
       name: "Trung tâm báo cáo",
-      url: "#",
+      url: "/report",
       icon: PieChart,
     },
     {
@@ -159,10 +159,10 @@ const data = {
           <SidebarMenu>
             <SidebarMenuItem>
               <SidebarMenuButton as-child>
-                <a href="#">
+                <nuxt-link to="/">
                   <Sparkles />
                   <span>Tổng quan</span>
-                </a>
+                </nuxt-link>
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
@@ -208,10 +208,10 @@ const data = {
           <SidebarMenu>
             <SidebarMenuItem v-for="item in data.projects" :key="item.name">
               <SidebarMenuButton as-child>
-                <a :href="item.url">
+                <nuxt-link :to="item.url">
                   <component :is="item.icon" />
                   <span>{{ item.name }}</span>
-                </a>
+                </nuxt-link>
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
@@ -302,8 +302,8 @@ const data = {
           <Breadcrumb>
             <BreadcrumbList>
               <BreadcrumbItem class="hidden md:block">
-                <BreadcrumbLink href="#">
-                  Building Your Application
+                <BreadcrumbLink as-child>
+                  <nuxt-link to="/">Tổng quan</nuxt-link>
                 </BreadcrumbLink>
               </BreadcrumbItem>
               <BreadcrumbSeparator class="hidden md:block" />
@@ -316,12 +316,6 @@ const data = {
       </header>
       <div class="flex flex-1 flex-col gap-4 p-4 pt-0">
         <slot />
-        <div class="grid auto-rows-min gap-4 md:grid-cols-3">
-          <div class="aspect-video rounded-xl bg-muted/50" />
-          <div class="aspect-video rounded-xl bg-muted/50" />
-          <div class="aspect-video rounded-xl bg-muted/50" />
-        </div>
-        <div class="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min" />
       </div>
     </SidebarInset>
   </SidebarProvider>

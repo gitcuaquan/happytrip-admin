@@ -1,12 +1,13 @@
+
 export class FilterOnParams {
     sortBy?: string;
     fields?: string;
     limit?: number;
     page?: number;
-    constructor(sortBy?: string, fields?: string, limit?: number, page?: number) {
-        this.sortBy = sortBy;
-        this.fields = fields;
-        this.limit = limit ?? 250;
-        this.page = page ?? 1;
+    constructor(initValue?: { sortBy?: string, fields?: string, limit?: number, page?: number }) {
+        this.sortBy = initValue?.sortBy;
+        this.fields = initValue?.fields;
+        this.limit = initValue?.limit ?? 20;
+        this.page = initValue?.page ?? 1;
     }
 }
