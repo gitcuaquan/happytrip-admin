@@ -27,9 +27,9 @@
             {{ format(new Date(item.request_date), "HH:mm dd/MM/yyyy") }}
           </TableCell>
           <TableCell>
-           <div class="flex items-center gap-2">
-            <Sheet :size="15" />  {{ item.format_value }}
-           </div>
+            <div class="flex items-center gap-2">
+              <Sheet :size="15" /> {{ item.format_value }}
+            </div>
           </TableCell>
           <TableCell>
             <Badge :variant="item.status === 2 ? 'success' : 'destructive'">
@@ -37,7 +37,11 @@
             </Badge>
           </TableCell>
           <TableCell>
-            <Button @click="saveAsXlsxFile(item.fileDataBase64)" variant="ghost" size="sm">
+            <Button
+              @click="saveAsXlsxFile(item.fileDataBase64)"
+              variant="ghost"
+              size="sm"
+            >
               <FileDown />
             </Button>
           </TableCell>
@@ -56,11 +60,13 @@
 <script setup lang="ts">
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { ReportService } from "~/services/ReportService";
 import { FilterOnParams } from "../model/common";
 import type { ResponeData, ReportItem } from "../model/interface";
-import { FileDown,Sheet, UserPen } from "lucide-vue-next";
+import { FileDown, Sheet, UserPen } from "lucide-vue-next";
 import { format } from "date-fns";
+import { toast } from "vue-sonner";
+
+const { $ReportService } = useServices();
 
 const reportData = ref<ResponeData<ReportItem>>();
 
@@ -70,8 +76,6 @@ const params = ref<FilterOnParams>(
       "id,type_value,type,request_date,format,format_value,status,status_value,admin,fileDataBase64",
   })
 );
-
-const reportService = new ReportService();
 
 onMounted(() => {
   getData();
@@ -85,14 +89,13 @@ watch(
 );
 
 function getData() {
-  reportService
-    .get(params.value, {})
-    .then((res) => {
+  try {
+    $ReportService.get(params.value, {}).then((res) => {
       reportData.value = res;
-    })
-    .catch((err) => {
-      console.log(err);
     });
+  } catch (error) {
+    console.log(error);
+  }
 }
 function saveAsXlsxFile(base64: string) {
   var mediaType =
@@ -100,10 +103,11 @@ function saveAsXlsxFile(base64: string) {
   var a = document.createElement("a");
   a.href = mediaType + base64;
   //a.href = mediaType+userInp;
-  a.download = `report-${format(new Date(),'HH:mm:ss dd-MM-yyyy')}.xlsx`;
+  a.download = `report-${format(new Date(), "HH:mm:ss dd-MM-yyyy")}.xlsx`;
   a.textContent = "Download file!";
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
+  toast.success("Tải file thành công");
 }
 </script>

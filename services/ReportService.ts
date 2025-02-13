@@ -21,7 +21,6 @@ export class ReportService extends Service {
                 resolve(data);
             }
             catch (error) {
-                console.log("🚀 ~ ReportService ~ returnnewPromise ~ error:", error)
                 reject(error);
             }
         });

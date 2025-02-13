@@ -23,6 +23,7 @@ import {
   SquareTerminal,
   Trash2,
 } from "lucide-vue-next";
+import AdminService from "~/services/AdminService";
 
 // This is sample data.
 const data = {
@@ -281,7 +282,7 @@ const data = {
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>
+                <DropdownMenuItem @click="AdminService.logout()">
                   <LogOut />
                   Đăng xuất
                 </DropdownMenuItem>

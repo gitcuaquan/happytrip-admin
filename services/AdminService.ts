@@ -33,6 +33,18 @@ class AdminService {
                 });
         });
     }
+    /**
+     *  Đăng xuất
+     */
+    logout() {
+        // khởi tạo route
+        const route = useRouter();
+        // xóa cookie
+        const token = useCookie(TOKEN_IN_COOKIE)
+        token.value = '';
+        // chuyển hướng về trang login
+        route.push('/login');
+    }
 }
 
 export default new AdminService();

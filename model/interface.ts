@@ -71,3 +71,10 @@ export interface ReportItem {
     fileDataBase64: string;
     progress: number;
 }
+
+
+export interface OrderOverviewItem {
+    total_price: number;
+    total_order: number;
+    date: string; // ISO Date string
+}
