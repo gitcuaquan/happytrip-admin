@@ -78,7 +78,7 @@ export class Wallet implements IWallet {
 export class WalletFilter {
     from_date?: string;
     to_date?: string;
-    isAffilate?: boolean;
+    isAffilate?: boolean | null;
     keyword?: string;
     constructor(initValue?: WalletFilter) {
         Object.assign(this, initValue);
