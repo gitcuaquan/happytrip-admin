@@ -1,152 +1,152 @@
 <script setup lang="ts">
-import {
-  AudioWaveform,
-  BadgeCheck,
-  Bell,
-  BookOpen,
-  Bot,
-  ChevronRight,
-  ChevronsUpDown,
-  Command,
-  CreditCard,
-  Folder,
-  Forward,
-  Frame,
-  GalleryVerticalEnd,
-  LogOut,
-  Map,
-  MoreHorizontal,
-  PieChart,
-  Plus,
-  Settings2,
-  Sparkles,
-  SquareTerminal,
-  Trash2,
-} from "lucide-vue-next";
-import AdminService from "~/services/AdminService";
+  import {
+    AudioWaveform,
+    BadgeCheck,
+    Bell,
+    BookOpen,
+    Bot,
+    ChevronRight,
+    ChevronsUpDown,
+    Command,
+    CreditCard,
+    Folder,
+    Forward,
+    Frame,
+    GalleryVerticalEnd,
+    LogOut,
+    Map,
+    MoreHorizontal,
+    PieChart,
+    Plus,
+    Settings2,
+    Sparkles,
+    SquareTerminal,
+    Trash2,
+  } from "lucide-vue-next";
+  import AdminService from "~/services/AdminService";
 
-// This is sample data.
-const data = {
-  user: {
-    name: "Quân Tạ",
-    email: "quan@example.com",
-    avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWrLzlCvzW9PJ6RDf_dUMIeG2khQ6zFGKXFw&s",
-  },
-  navMain: [
-    {
-      title: "Quản lý chuyến đi",
-      url: "#",
-      icon: SquareTerminal,
-      isActive: true,
-      items: [
-        {
-          title: "Đang chờ tài xế",
-          url: "#",
-        },
-        {
-          title: "Đã được nhận ",
-          url: "#",
-        },
-        {
-          title: "Đã hoàn thành",
-          url: "#",
-        },
-        {
-          title: "Đã bị hủy",
-          url: "#",
-        },
-        {
-          title: "Lệnh hủy chuyến",
-          url: "#",
-        },
-      ],
+  // This is sample data.
+  const data = {
+    user: {
+      name: "Quân Tạ",
+      email: "quan@example.com",
+      avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWrLzlCvzW9PJ6RDf_dUMIeG2khQ6zFGKXFw&s",
     },
-    {
-      title: "Quản lý tài chính",
-      url: "#",
-      icon: Bot,
-      isActive: true,
-      items: [
-        {
-          title: "Tổng quan tài chính",
-          url: "#",
-        },
-        {
-          title: "Lệnh rút tiền",
-          url: "#",
-        },
-        {
-          title: "Lịch sử giao dịch",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Quản lý nhân sự",
-      url: "#",
-      icon: BookOpen,
-      isActive: true,
-      items: [
-        {
-          title: "Khách hàng",
-          url: "#",
-        },
-        {
-          title: "Tài xế",
-          url: "#",
-        },
-        {
-          title: "Cộng tác viên",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Cài đặt",
-      url: "#",
-      icon: Settings2,
-      items: [
-        {
-          title: "Tỉnh thành",
-          url: "#",
-        },
-        {
-          title: "Giá sàn",
-          url: "#",
-        },
-        {
-          title: "Phụ phí",
-          url: "#",
-        },
-        {
-          title: "Hãng xe",
-          url: "#",
-        },
-        {
-          title: "Bảng giá",
-          url: "#",
-        },
-      ],
-    },
-  ],
-  projects: [
-    {
-      name: "Trung tâm báo cáo",
-      url: "/report",
-      icon: PieChart,
-    },
-    {
-      name: "Lịch sử giao dịch",
-      url: "#",
-      icon: Frame,
-    },
-    {
-      name: "Quản lý ví tiền",
-      url: "#",
-      icon: Map,
-    },
-  ],
-};
+    navMain: [
+      {
+        title: "Quản lý chuyến đi",
+        url: "#",
+        icon: SquareTerminal,
+        isActive: true,
+        items: [
+          {
+            title: "Đang chờ tài xế",
+            url: "#",
+          },
+          {
+            title: "Đã được nhận ",
+            url: "#",
+          },
+          {
+            title: "Đã hoàn thành",
+            url: "#",
+          },
+          {
+            title: "Đã bị hủy",
+            url: "#",
+          },
+          {
+            title: "Lệnh hủy chuyến",
+            url: "#",
+          },
+        ],
+      },
+      {
+        title: "Quản lý tài chính",
+        url: "#",
+        icon: Bot,
+        isActive: true,
+        items: [
+          {
+            title: "Danh sách ví",
+            url: "/finance/wallet-list",
+          },
+          {
+            title: "Lệnh rút tiền",
+            url: "#",
+          },
+          {
+            title: "Lịch sử giao dịch",
+            url: "#",
+          },
+        ],
+      },
+      {
+        title: "Quản lý nhân sự",
+        url: "#",
+        icon: BookOpen,
+        isActive: true,
+        items: [
+          {
+            title: "Khách hàng",
+            url: "#",
+          },
+          {
+            title: "Tài xế",
+            url: "#",
+          },
+          {
+            title: "Cộng tác viên",
+            url: "#",
+          },
+        ],
+      },
+      {
+        title: "Cài đặt",
+        url: "#",
+        icon: Settings2,
+        items: [
+          {
+            title: "Tỉnh thành",
+            url: "#",
+          },
+          {
+            title: "Giá sàn",
+            url: "#",
+          },
+          {
+            title: "Phụ phí",
+            url: "#",
+          },
+          {
+            title: "Hãng xe",
+            url: "#",
+          },
+          {
+            title: "Bảng giá",
+            url: "#",
+          },
+        ],
+      },
+    ],
+    projects: [
+      {
+        name: "Trung tâm báo cáo",
+        url: "/report",
+        icon: PieChart,
+      },
+      {
+        name: "Lịch sử giao dịch",
+        url: "#",
+        icon: Frame,
+      },
+      {
+        name: "Quản lý ví tiền",
+        url: "#",
+        icon: Map,
+      },
+    ],
+  };
 </script>
 
 <template>
@@ -169,33 +169,24 @@ const data = {
           </SidebarMenu>
           <SidebarGroupLabel>Quản lý</SidebarGroupLabel>
           <SidebarMenu>
-            <Collapsible
-              v-for="item in data.navMain"
-              :key="item.title"
-              as-child
-              :default-open="item.isActive"
-              class="group/collapsible"
-            >
+            <Collapsible v-for="item in data.navMain" :key="item.title" as-child :default-open="item.isActive"
+              class="group/collapsible">
               <SidebarMenuItem>
                 <CollapsibleTrigger as-child>
                   <SidebarMenuButton :tooltip="item.title">
                     <component :is="item.icon" />
                     <span>{{ item.title }}</span>
                     <ChevronRight
-                      class="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90"
-                    />
+                      class="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
                   </SidebarMenuButton>
                 </CollapsibleTrigger>
                 <CollapsibleContent>
                   <SidebarMenuSub>
-                    <SidebarMenuSubItem
-                      v-for="subItem in item.items"
-                      :key="subItem.title"
-                    >
+                    <SidebarMenuSubItem v-for="subItem in item.items" :key="subItem.title">
                       <SidebarMenuSubButton as-child>
-                        <a :href="subItem.url">
+                        <nuxt-link :to="subItem.url">
                           <span>{{ subItem.title }}</span>
-                        </a>
+                        </nuxt-link>
                       </SidebarMenuSubButton>
                     </SidebarMenuSubItem>
                   </SidebarMenuSub>
@@ -223,15 +214,10 @@ const data = {
           <SidebarMenuItem>
             <DropdownMenu>
               <DropdownMenuTrigger as-child>
-                <SidebarMenuButton
-                  size="lg"
-                  class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-                >
+                <SidebarMenuButton size="lg"
+                  class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground">
                   <Avatar class="h-8 w-8 rounded-lg">
-                    <AvatarImage
-                      :src="data.user.avatar"
-                      :alt="data.user.name"
-                    />
+                    <AvatarImage :src="data.user.avatar" :alt="data.user.name" />
                     <AvatarFallback class="rounded-lg"> CN </AvatarFallback>
                   </Avatar>
                   <div class="grid flex-1 text-left text-sm leading-tight">
@@ -243,21 +229,12 @@ const data = {
                   <ChevronsUpDown class="ml-auto size-4" />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
-              <DropdownMenuContent
-                class="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
-                side="bottom"
-                align="end"
-                :side-offset="4"
-              >
+              <DropdownMenuContent class="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg" side="bottom"
+                align="end" :side-offset="4">
                 <DropdownMenuLabel class="p-0 font-normal">
-                  <div
-                    class="flex items-center gap-2 px-1 py-1.5 text-left text-sm"
-                  >
+                  <div class="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                     <Avatar class="h-8 w-8 rounded-lg">
-                      <AvatarImage
-                        :src="data.user.avatar"
-                        :alt="data.user.name"
-                      />
+                      <AvatarImage :src="data.user.avatar" :alt="data.user.name" />
                       <AvatarFallback class="rounded-lg"> CN </AvatarFallback>
                     </Avatar>
                     <div class="grid flex-1 text-left text-sm leading-tight">
@@ -278,7 +255,7 @@ const data = {
                   </DropdownMenuItem>
                   <DropdownMenuItem>
                     <Bell />
-                   Thông báo
+                    Thông báo
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
@@ -295,8 +272,7 @@ const data = {
     </Sidebar>
     <SidebarInset>
       <header
-        class="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12"
-      >
+        class="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
         <div class="flex items-center gap-2 px-4">
           <SidebarTrigger class="-ml-1" />
           <Separator orientation="vertical" class="mr-2 h-4" />
@@ -323,26 +299,27 @@ const data = {
 </template>
 
 <style>
-[data-sidebar="sidebar"] {
-  background: #ffffff !important;
-  border-right: 1px solid #e5e7eb;
-}
-[data-sidebar="content"] {
-  overflow-y: auto;
-  scrollbar-width: thin;
-  scrollbar-color: #cbd5e0 #f7fafc;
-}
+  [data-sidebar="sidebar"] {
+    background: #ffffff !important;
+    border-right: 1px solid #e5e7eb;
+  }
 
-[data-sidebar="content"]::-webkit-scrollbar {
-  width: 8px;
-}
+  [data-sidebar="content"] {
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e0 #f7fafc;
+  }
 
-[data-sidebar="content"]::-webkit-scrollbar-track {
-  background: #f7fafc;
-}
+  [data-sidebar="content"]::-webkit-scrollbar {
+    width: 8px;
+  }
 
-[data-sidebar="content"]::-webkit-scrollbar-thumb {
-  background-color: #cbd5e0;
-  border-radius: 4px;
-}
+  [data-sidebar="content"]::-webkit-scrollbar-track {
+    background: #f7fafc;
+  }
+
+  [data-sidebar="content"]::-webkit-scrollbar-thumb {
+    background-color: #cbd5e0;
+    border-radius: 4px;
+  }
 </style>

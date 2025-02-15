@@ -3,7 +3,8 @@ export const TOKEN_IN_COOKIE = 'hpt_token';
 
 
 export class Service {
-    BASE_URL = 'https://sys.happytrip.vn/api';
+    /** 'https://sysdev.happytrip.vn/api' */
+    BASE_URL = 'https://sysdev.happytrip.vn/api';
     protected $AuthFetch: typeof $fetch;
     constructor() {
         const token = useCookie(TOKEN_IN_COOKIE);
