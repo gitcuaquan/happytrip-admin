@@ -35,13 +35,12 @@
     navMain: [
       {
         title: "Quản lý chuyến đi",
-        url: "#",
         icon: SquareTerminal,
         isActive: true,
         items: [
           {
             title: "Đang chờ tài xế",
-            url: "#",
+            url: "/order",
           },
           {
             title: "Đã được nhận ",

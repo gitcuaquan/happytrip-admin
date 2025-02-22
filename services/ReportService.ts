@@ -2,7 +2,7 @@ import type { FilterOnParams } from "~/model/common";
 import { Service } from "./Service";
 import type {ReportItem,  ResponeData} from "~/model/interface";
 
-export class ReportService extends Service {
+export default class ReportService extends Service {
     URL_SERVICE_BASE = this.BASE_URL + '/report';
     constructor() {
         super();

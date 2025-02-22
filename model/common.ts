@@ -1,6 +1,7 @@
 
 export interface IFilterOnParams {
     sortBy?: string;
+    sort_by?: string;
     fields?: string;
     limit?: number;
     page?: number;
@@ -8,6 +9,7 @@ export interface IFilterOnParams {
 
 export class FilterOnParams implements IFilterOnParams {
     sortBy?: string;
+    sort_by?: string;
     fields?: string;
     limit?: number;
     page?: number;

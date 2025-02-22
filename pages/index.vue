@@ -10,7 +10,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { OrderOverviewItem } from "../model/interface";
+import type { IOrderOverviewItem } from "@/model/order";
 import Chart from "chart.js/auto";
 definePageMeta({
   middleware: "auth",
@@ -27,7 +27,7 @@ useHead({
 
 const { $OrderService } = useServices();
 
-const orderOverview = ref<OrderOverviewItem[]>();
+const orderOverview = ref<IOrderOverviewItem[]>();
 const myCanvas = ref<HTMLCanvasElement>();
 const priceCanvas = ref<HTMLCanvasElement>();
 

@@ -1,0 +1,243 @@
+interface IOrderOverviewItem {
+    total_price: number;
+    total_order: number;
+    date: string; // ISO Date string
+}
+
+// Interface cho Address
+interface IAddress {
+    address_1?: string ;
+    address_2?: string ;
+    city?: string ;
+    district?: string ;
+}
+
+// Interface cho BankInfo
+interface IBankInfo {
+    name?: string ;
+    bank_card?: string ;
+    bank_name?: string ;
+}
+
+// Enum cho PartnerStatus
+enum ePartnerStatus {
+    STATUS_0,
+    STATUS_1,
+    STATUS_2,
+}
+
+// Interface cho Transport
+interface ITransport {
+    name?: string ;
+    type?: eTransportType;
+    type_name?: string ;
+    license_plate?: string ;
+    hang_xe?: string ;
+    ten_xe?: string ;
+    created_year?: string ;
+}
+
+// Interface cho Partner
+interface IPartner {
+    id?: string ;
+    full_name?: string ;
+    phone?: string ;
+    password?: string ;
+    transport?: ITransport;
+    status_type?: ePartnerStatus;
+    bank_info?: IBankInfo;
+    status_name?: string ;
+    created_at?: string ;
+    isFreezen?: boolean ;
+    otp_sms?: string ;
+}
+
+// Interface cho City
+interface ICity {
+    name?: string ;
+    code?: string ;
+    status?: boolean ;
+    id?: string ;
+    districts?: IDistrict[] ;
+}
+
+// Interface cho District
+interface IDistrict {
+    name?: string ;
+    code?: string ;
+    status?: boolean ;
+}
+
+// Enum cho ServiceType
+enum eServiceType {
+    TYPE_0,
+    TYPE_1,
+    TYPE_2,
+}
+
+// Enum cho TransportType
+enum eTransportType {
+    TYPE_0,
+    TYPE_1,
+    TYPE_2,
+    TYPE_3,
+}
+
+// Interface cho Service
+interface IService {
+    id?: string ;
+    name?: string ;
+    short_id?: string ;
+    description?: string ;
+    service_type?: eServiceType;
+    service_name?: string ;
+    transport_type?: eTransportType;
+    transport_name?: string ;
+    price_system?: number ;
+    includes_transport?: ITransport[] ;
+    is_show?: boolean ;
+    image_url?: string ;
+}
+
+// Interface cho SubFee
+interface ISubFee {
+    id?: string ;
+    short_id?: string ;
+    name_display?: string ;
+    name?: string ;
+    status?: boolean ;
+    dates?: string[] ;
+    destination?: ICity;
+    depature?: ICity;
+    service?: IService;
+    price?: number ;
+    value?: number ;
+    value_type?: string ;
+    created_at?: string ;
+}
+
+// Interface cho SubFeeOrder
+interface ISubFeeOrder {
+    sub_fee_price?: number ;
+    sub_fees?: ISubFee[] ;
+}
+
+// Interface cho Customer
+interface ICustomer {
+    id?: string ;
+    full_name?: string ;
+    short_id?: string ;
+    service?: IService;
+    phone?: string ;
+    created_at?: string ;
+}
+
+// Enum cho OrderStatus
+enum eOrderStatus {
+    WAITING, // Chờ xác nhận
+    ACCEPTED, // Đã xác nhận
+    COMPLETED, // Đã hoàn thành
+    CANCELLED, // Đã hủy
+}
+
+// Interface cho UserInformation
+interface IUserInformation {
+    user_id?: string ;
+    user_phone?: string ;
+    user_full_name?: string ;
+    user_name?: string ;
+    user_type?: string ;
+}
+
+// Interface cho Order
+interface IOrder {
+    id?: string ;
+    short_id?: string ;
+    id_service?: string ;
+    name_service?: string ;
+    departure?: IAddress;
+    destination?: IAddress;
+    date_of_destination?: string ;
+    partner?: IPartner;
+    quantity?: number ;
+    price?: number ;
+    price_after?: number ;
+    price_guest_after?: number ;
+    price_guest?: number ;
+    price_system?: number ;
+    net_profit?: number ;
+    distance?: number ;
+    sub_fees?: ISubFeeOrder;
+    created?: string ;
+    customer?: ICustomer;
+    status_type?: eOrderStatus;
+    status_name?: string ;
+    total_transaction?: number ;
+    creator?: IUserInformation;
+    note?: string ;
+}
+
+class Order implements IOrder {
+    id?: string ;
+    short_id?: string ;
+    id_service?: string ;
+    name_service?: string ;
+    departure?: IAddress;
+    destination?: IAddress;
+    date_of_destination?: string ;
+    partner?: IPartner;
+    quantity?: number ;
+    price?: number ;
+    price_after?: number ;
+    price_guest_after?: number ;
+    price_guest?: number ;
+    price_system?: number ;
+    net_profit?: number ;
+    distance?: number ;
+    sub_fees?: ISubFeeOrder;
+    created?: string ;
+    customer?: ICustomer;
+    status_type?: eOrderStatus;
+    status_name?: string ;
+    total_transaction?: number ;
+    creator?: IUserInformation;
+    note?: string ;
+    constructor(initValue?: IOrder) {
+        Object.assign(this, initValue);
+
+    }
+}
+
+class OrderFilter {
+    from_date_of_destination?: string ;
+    to_date_of_destination?: string ;
+    city_diemdon?: string;
+    city_diemden?: string;
+    keyword?: string;
+    order_status?: eOrderStatus;
+    constructor(initValue?: OrderFilter) {
+        Object.assign(this, initValue);
+    }
+}
+
+export {
+    type IOrderOverviewItem,
+    type IAddress,
+    type IBankInfo,
+    ePartnerStatus,
+    type ITransport,
+    type IPartner,
+    type ICity,
+    type IDistrict,
+    eServiceType,
+    eTransportType,
+    type IService,
+    type ISubFee,
+    type ISubFeeOrder,
+    type ICustomer,
+    eOrderStatus,
+    type IUserInformation,
+    type IOrder,
+    Order,
+    OrderFilter
+};
