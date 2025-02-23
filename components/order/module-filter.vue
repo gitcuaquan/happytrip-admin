@@ -32,7 +32,10 @@
             >
           </SelectContent>
         </Select>
-        <Select :disabled="!state.citySelected.from">
+        <Select
+          :disabled="!state.citySelected.from"
+          v-model="props.filter.district_depature"
+        >
           <SelectTrigger>
             <SelectValue placeholder="Chọn quận huyện đón" />
           </SelectTrigger>
@@ -59,7 +62,10 @@
             </SelectItem>
           </SelectContent>
         </Select>
-        <Select :disabled="!state.citySelected.to">
+        <Select
+          :disabled="!state.citySelected.to"
+          v-model="props.filter.district_destination"
+        >
           <SelectTrigger>
             <SelectValue placeholder="Chọn quận huyện trả" />
           </SelectTrigger>
@@ -74,11 +80,17 @@
         </Select>
       </div>
     </div>
-    <div class="col-span-2">
-      <ShareDataPicker @update="handleUpdate" :default="[props.filter?.from_date_of_destination ?? '', props.filter?.to_date_of_destination ?? '']" />
-    </div>
-    <div class="text-right col-span-2">
-      <slot></slot>
+    <div class="col-span-4">
+      <div class="flex gap-4 items-center">
+        <ShareDataPicker
+          @update="handleUpdate"
+          :default="[
+            props.filter?.from_date_of_destination ?? '',
+            props.filter?.to_date_of_destination ?? '',
+          ]"
+        />
+        <slot></slot>
+      </div>
     </div>
   </Card>
   <!-- {{ filter }} -->
@@ -94,8 +106,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { City, ResponeDistricts } from "~/model/address"
-import  { OrderFilter } from "@/model/order";
+import type { City, ResponeDistricts } from "~/model/address";
+import { OrderFilter } from "@/model/order";
 
 const { $AddressService } = useServices();
 
@@ -106,7 +118,6 @@ interface IProps {
 const props = withDefaults(defineProps<IProps>(), {
   filter: () => new OrderFilter(),
 });
-
 
 const keyword = useDebouncedRef("", 500);
 
@@ -126,7 +137,7 @@ const state = reactive({
   },
 });
 
-const handleUpdate = (dates:{start:string,end:string}) => {
+const handleUpdate = (dates: { start: string; end: string }) => {
   props.filter.from_date_of_destination = dates.start;
   props.filter.to_date_of_destination = dates.end;
 };
@@ -142,7 +153,28 @@ onMounted(() => {
     });
 });
 
+watch(
+  () => state.citySelected.from,
+  () => {
+    props.filter.city_diemdon = listCity.value.find(
+      (item) => item.id == state.citySelected.from
+    )?.name;
+    props.filter.district_depature = "";
+  }
+);
+
+watch(
+  () => state.citySelected.to,
+  () => {
+    props.filter.city_diemden = listCity.value.find(
+      (item) => item.id == state.citySelected.to
+    )?.name;
+    props.filter.district_destination = "";
+  }
+);
+
 watchEffect(() => {
+  // gán keyword vào filter
   props.filter.keyword = keyword.value;
   if (state.citySelected.from) {
     $AddressService

@@ -16,7 +16,7 @@ import { Calendar as CalendarIcon } from 'lucide-vue-next'
 import { getDate, getMonth, getYear,format } from "date-fns"
 
 const df = new DateFormatter('vi-VN', {
-  dateStyle: 'medium'
+  dateStyle: 'short'
 })
 interface IProps {
  default: string[]
@@ -47,9 +47,10 @@ watch(() => value.value, () => {
   <Popover>
     <PopoverTrigger as-child>
       <Button
+        size="lg"
         variant="outline"
         :class="cn(
-          ' w-full justify-start text-left font-normal',
+          ' w-[220px] justify-start text-left shadow-none font-normal',
           !value && 'text-muted-foreground',
         )"
       >
@@ -69,7 +70,7 @@ watch(() => value.value, () => {
       </Button>
     </PopoverTrigger>
     <PopoverContent class="w-auto p-0">
-      <RangeCalendar v-model="value" initial-focus :number-of-months="2" @update:start-value="(startDate) => value.start = startDate" />
+      <RangeCalendar v-model="value" locale="vi" initial-focus :number-of-months="2" @update:start-value="(startDate) => value.start = startDate" />
     </PopoverContent>
   </Popover>
 </template>

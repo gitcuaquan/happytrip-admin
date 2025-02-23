@@ -1,3 +1,4 @@
+
 interface IOrderOverviewItem {
     total_price: number;
     total_order: number;
@@ -8,8 +9,8 @@ interface IOrderOverviewItem {
 interface IAddress {
     address_1?: string ;
     address_2?: string ;
-    city?: string ;
     district?: string ;
+    city?: string ;
 }
 
 // Interface cho BankInfo
@@ -207,18 +208,45 @@ class Order implements IOrder {
 
     }
 }
+ enum eTypeOrderCancel {
+    TYPE_0,
+    TYPE_1,
+    TYPE_2
+}
+
+class OrderCancelItem extends Order {
+    order_id?: string;
+    order_short_id?: string;
+    user_creator?: IUserInformation;
+    user_creator_order?: IUserInformation;
+    type?: eTypeOrderCancel;
+    type_value?: string;
+    constructor(initValue?: OrderCancelItem) {
+        super(initValue);
+        Object.assign(this, initValue);
+    }
+}
 
 class OrderFilter {
     from_date_of_destination?: string ;
     to_date_of_destination?: string ;
+    from_created_at?: string;
+    to_created_at?: string;
     city_diemdon?: string;
     city_diemden?: string;
+    district_depature?: string;
+    district_destination?: string;
+    order_expired?: boolean;
     keyword?: string;
     order_status?: eOrderStatus;
+    order_cancel_type?: "Tài xế" | "Khách hàng" |"Người tạo" ;
+    order_status_value?:string
+    type?:eTypeOrderCancel;
     constructor(initValue?: OrderFilter) {
         Object.assign(this, initValue);
     }
 }
+
 
 export {
     type IOrderOverviewItem,
@@ -231,6 +259,7 @@ export {
     type IDistrict,
     eServiceType,
     eTransportType,
+    eTypeOrderCancel,
     type IService,
     type ISubFee,
     type ISubFeeOrder,
@@ -239,5 +268,6 @@ export {
     type IUserInformation,
     type IOrder,
     Order,
-    OrderFilter
+    OrderFilter,
+    OrderCancelItem
 };

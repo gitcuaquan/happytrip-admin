@@ -1,6 +1,7 @@
 <template>
   <ScrollArea class="h-[calc(100vh-220px)] shadow-sm">
     <ShareLoading v-if="props.loading" />
+    <ShareNoData v-else-if="!props.orders.length" />
     <Table>
       <TableHeader class="sticky top-0 z-10 bg-white shadow-sm">
         <TableRow>
@@ -26,9 +27,9 @@
           <!-- Ngày tạo -->
           <TableCell> {{ order.created }} </TableCell>
           <!-- Điểm đón -->
-          <TableCell> {{ order.departure?.city }} </TableCell>
+          <TableCell> {{ order.departure?.city }} - {{ order.departure?.district }} </TableCell>
           <!-- Điểm trả -->
-          <TableCell> {{ order.destination?.city }} </TableCell>
+          <TableCell> {{ order.destination?.city }} - {{ order.destination?.district }} </TableCell>
           <!-- Dịch vụ -->
           <TableCell> {{ order.name_service }} </TableCell>
           <!-- Thu khách -->

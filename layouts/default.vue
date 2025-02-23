@@ -44,19 +44,19 @@
           },
           {
             title: "Đã được nhận ",
-            url: "#",
+            url: "/order/accept",
           },
           {
             title: "Đã hoàn thành",
-            url: "#",
+            url: "/order/success",
           },
           {
             title: "Đã bị hủy",
-            url: "#",
+            url: "/order/cancel-hold",
           },
           {
             title: "Lệnh hủy chuyến",
-            url: "#",
+            url: "/order/cancel-waiting",
           },
         ],
       },
@@ -176,7 +176,7 @@
                     <component :is="item.icon" />
                     <span>{{ item.title }}</span>
                     <ChevronRight
-                      class="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+                      class="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-180" />
                   </SidebarMenuButton>
                 </CollapsibleTrigger>
                 <CollapsibleContent>
