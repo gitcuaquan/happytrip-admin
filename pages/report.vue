@@ -54,14 +54,14 @@
   import { Badge } from "@/components/ui/badge";
   import { ScrollArea } from "@/components/ui/scroll-area";
   import { FilterOnParams } from "../model/common";
-  import type { ResponeData, ReportItem } from "../model/interface";
+  import type { RsData, ReportItem } from "../model/interface";
   import { FileDown, Sheet, UserPen } from "lucide-vue-next";
   import { format } from "date-fns";
   import { toast } from "vue-sonner";
 
   const { $ReportService } = useServices();
 
-  const reportData = ref<ResponeData<ReportItem>>();
+  const reportData = ref<RsData<ReportItem>>();
   const state = reactive({
     loading: false,
   });

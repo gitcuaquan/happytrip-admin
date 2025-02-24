@@ -2,7 +2,7 @@
 import type { IOrder, IOrderOverviewItem, OrderFilter } from "@/model/order";
 import { Service } from "./Service";
 import type { FilterOnParams } from "@/model/common";
-import type { ResponeData } from "@/model/interface";
+import type { RsData } from "@/model/interface";
 
 export default class OrderService extends Service {
     URL_SERVICE_BASE = this.BASE_URL + '/order';
@@ -30,7 +30,7 @@ export default class OrderService extends Service {
         try {
             
             const url = this.URL_SERVICE_BASE + '/list';
-            const data = await this.$AuthFetch<ResponeData<IOrder>>(url, {
+            const data = await this.$AuthFetch<RsData<IOrder>>(url, {
                 method: 'POST',
                 params: params,
                 body: JSON.stringify(filter)

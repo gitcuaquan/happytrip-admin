@@ -17,7 +17,7 @@
         </span>
       </div>
     </div>
-    <div class="col-span-2">
+    <div class="col-span-2" v-if="showType">
       <Select v-model="props.filter.order_cancel_type">
         <SelectTrigger>
           <SelectValue placeholder="Chọn đối tượng hủy" />
@@ -59,17 +59,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { City, ResponeDistricts } from "~/model/address";
 import { OrderFilter } from "@/model/order";
 
-const { $AddressService } = useServices();
 
 interface IProps {
   filter?: OrderFilter;
+  showType?: boolean;
 }
 
 const props = withDefaults(defineProps<IProps>(), {
   filter: () => new OrderFilter(),
+  showType: true
 });
 
 const keyword = useDebouncedRef("", 500);

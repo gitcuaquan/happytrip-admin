@@ -54,7 +54,7 @@
 <script lang="ts" setup>
 import { format } from "date-fns";
 import { FilterOnParams } from "~/model/common";
-import type { ResponeData } from "~/model/interface";
+import type { RsData } from "~/model/interface";
 import type { Partner } from "~/model/partner";
 
 const { $PartnerService } = useServices();
@@ -67,7 +67,7 @@ const state = reactive({
   loading: false,
 });
 // Data
-const driverData = ref<ResponeData<Partner>>();
+const driverData = ref<RsData<Partner>>();
 
 async function getData() {
   state.loading = true;

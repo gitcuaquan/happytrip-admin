@@ -1,4 +1,4 @@
-import type { ResponeData } from "~/model/interface";
+import type { RsData } from "~/model/interface";
 import { Service } from "./Service";
 import type { IWallet, WalletFilter } from "~/model/wallet";
 import type { FilterOnParams } from "~/model/common";
@@ -8,9 +8,9 @@ export default class WalletService extends Service {
 
     getLists(param: FilterOnParams, filter: WalletFilter) {
         const URL = this.SERVICE_URL + "/list";
-        return new Promise<ResponeData<IWallet>>(async (resolve, reject) => {
+        return new Promise<RsData<IWallet>>(async (resolve, reject) => {
             try {
-                const response = await this.$AuthFetch<ResponeData<IWallet>>(URL, {
+                const response = await this.$AuthFetch<RsData<IWallet>>(URL, {
                     method: "POST",
                     params: param,
                     body: JSON.stringify(filter)

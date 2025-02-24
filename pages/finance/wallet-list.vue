@@ -99,7 +99,7 @@
 <script lang="ts" setup>
 import { format } from "date-fns";
 import { FilterOnParams, type IFilterOnParams } from "~/model/common";
-import type { ResponeData } from "~/model/interface";
+import type { RsData } from "~/model/interface";
 import { WalletFilter, type IWallet } from "~/model/wallet";
 import { Ellipsis, Search, FolderDown } from "lucide-vue-next";
 import { Card } from "~/components/ui/card";
@@ -114,7 +114,7 @@ const { $WalletService } = useServices();
 
 const keyword = useDebouncedRef("", 300);
 // data
-const walletData = ref<ResponeData<IWallet> | null>(null);
+const walletData = ref<RsData<IWallet> | null>(null);
 // params
 const params = ref<IFilterOnParams>(new FilterOnParams({ limit: 50 }));
 // filter

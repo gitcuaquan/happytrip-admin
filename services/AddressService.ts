@@ -1,7 +1,7 @@
 import type { FilterOnParams } from "~/model/common";
 import { Service } from "./Service";
 import type { City, ResponeDistricts } from "~/model/address";
-import type { ResponeData } from "~/model/interface";
+import type { RsData } from "~/model/interface";
 
 
 class AddressService extends Service {

@@ -14,13 +14,13 @@
 
 <script lang="ts" setup>
 import type { FilterOnParams } from "@/model/common";
-import type { ResponeData } from "@/model/interface";
+import type { RsData } from "@/model/interface";
 import type { OrderCancelItem, OrderFilter } from "@/model/order";
 import { addDays, format } from "date-fns";
 
 const { $OrderCancelService } = useServices();
 
-const orderData = ref<ResponeData<OrderCancelItem>>();
+const orderData = ref<RsData<OrderCancelItem>>();
 
 const loading = ref<boolean>(true);
 

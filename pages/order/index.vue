@@ -54,14 +54,14 @@
 
 <script lang="ts" setup>
 import type { FilterOnParams } from "@/model/common";
-import type { ResponeData } from "@/model/interface";
+import type { RsData } from "@/model/interface";
 import { eOrderStatus, OrderFilter, type IOrder } from "@/model/order";
 import { addDays, format } from "date-fns";
 import { FolderDown, FilePlus2 } from "lucide-vue-next";
 
 const { $OrderService } = useServices();
 
-const orderData = ref<ResponeData<IOrder>>();
+const orderData = ref<RsData<IOrder>>();
 
 const loading = ref<boolean>(true);
 

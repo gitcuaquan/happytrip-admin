@@ -1,6 +1,6 @@
 import type { FilterOnParams } from "@/model/common";
 import { Service } from "./Service";
-import type { ResponeData } from "@/model/interface";
+import type { RsData } from "@/model/interface";
 import type { OrderCancelItem, OrderFilter } from "@/model/order";
 
 export default class OrderCancelService extends Service {
@@ -14,7 +14,7 @@ export default class OrderCancelService extends Service {
     async getOrderCancelList(params: FilterOnParams, filter: OrderFilter) {
         try {
             const URL = this.URL_SERVICE_BASE + '/history-cancel';
-            const response = await this.$AuthFetch<ResponeData<OrderCancelItem>>(URL, {
+            const response = await this.$AuthFetch<RsData<OrderCancelItem>>(URL, {
                 method: "POST",
                 params: params,
                 body: JSON.stringify(filter)

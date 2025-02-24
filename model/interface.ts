@@ -1,4 +1,4 @@
-export interface ResponeData<T> {
+export interface RsData<T> {
     data: T[];
     pagination: Pagination;
 }

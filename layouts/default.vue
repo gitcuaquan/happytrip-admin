@@ -72,7 +72,7 @@
           },
           {
             title: "Lệnh rút tiền",
-            url: "#",
+            url: "/finance/listwithdraw",
           },
           {
             title: "Lịch sử giao dịch",
