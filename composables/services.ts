@@ -1,9 +1,10 @@
-import OrderService  from "~/services/OrderService";
+import OrderService from "~/services/OrderService";
 import PartnerService from "~/services/PartnerService";
 import ReportService from "~/services/ReportService";
 import WalletService from "~/services/WalletService";
 import AddressService from "~/services/AddressService";
 import OrderCancelService from "@/services/OrderCancelServices";
+import AnnouncementService from "~/services/AnnouncementService";
 
 export const useServices = () => {
 
@@ -19,7 +20,10 @@ export const useServices = () => {
   const addressService = new AddressService();
   // services hủy đơn hàng
   const orderCancelService = new OrderCancelService();
+  // services thông báo
+  const announcementService = new AnnouncementService();
   return {
+    $AnnouncementService: announcementService,
     $OrderService: orderService,
     $ReportService: reportService,
     $WalletService: walletService,

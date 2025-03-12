@@ -69,8 +69,8 @@ useHead({
 const loading = ref(false);
 
 const user = ref({
-  phone: "0982315950",
-  password: "123456",
+  phone: "",
+  password: "",
 });
 
 async function handlerSubmit() {
