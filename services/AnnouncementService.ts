@@ -1,7 +1,7 @@
 import type { FilterOnParams } from "@/model/common";
 import { Service } from "./Service";
 import type { IAnnouncement } from "@/model/announcement";
-import type { ResponeData } from "@/model/interface";
+import type { RsData } from "@/model/interface";
 
 export default class AnnouncementService extends Service {
     constructor() {
@@ -31,9 +31,9 @@ export default class AnnouncementService extends Service {
      * @returns 
      */
     public getAnnouncements(param: FilterOnParams) {
-        return new Promise(async (resolve, reject) => {
+        return new Promise<RsData<IAnnouncement>>(async (resolve, reject) => {
             try {
-                const res = await this.$AuthFetch<ResponeData<IAnnouncement>>(`${this.BASE_URL}/announcements`, {
+                const res = await this.$AuthFetch<RsData<IAnnouncement>>(`${this.BASE_URL}/announcements`, {
                     method: 'GET',
                     params: {
                         ...param

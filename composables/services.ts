@@ -23,11 +23,9 @@ export const useServices = () => {
   const orderCancelService = new OrderCancelService();
   // services rút tiền
   const withdrawService = new WithdrawService();
-  return {
-    /** Serives order */
-  // services thông báo
   const announcementService = new AnnouncementService();
   return {
+    /** Serives order */
     $AnnouncementService: announcementService,
     $OrderService: orderService,
     $ReportService: reportService,

@@ -35,34 +35,6 @@ const data = {
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWrLzlCvzW9PJ6RDf_dUMIeG2khQ6zFGKXFw&s",
   },
   navMain: [
-    {
-      title: "Quản lý chuyến đi",
-      icon: SquareTerminal,
-      isActive: true,
-      items: [
-        {
-          title: "Đang chờ tài xế",
-          url: "/order",
-        },
-        {
-          title: "Đã được nhận ",
-          url: "/order/accept",
-        },
-        {
-          title: "Đã hoàn thành",
-          url: "/order/success",
-        },
-        {
-          title: "Đã bị hủy",
-          url: "/order/cancel-hold",
-        },
-        {
-          title: "Lệnh hủy chuyến",
-          url: "/order/cancel-waiting",
-        },
-      ],
-    },
-    navMain: [
       {
         title: "Quản lý chuyến đi",
         icon: SquareTerminal,
@@ -174,98 +146,12 @@ const data = {
         url: "#",
         icon: Map,
       },
-    ],
-  };
-    {
-      title: "Quản lý tài chính",
-      url: "#",
-      icon: Bot,
-      isActive: true,
-      items: [
-        {
-          title: "Danh sách ví",
-          url: "/finance/wallet-list",
-        },
-        {
-          title: "Lệnh rút tiền",
-          url: "#",
-        },
-        {
-          title: "Lịch sử giao dịch",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Quản lý nhân sự",
-      url: "#",
-      icon: BookOpen,
-      isActive: true,
-      items: [
-        {
-          title: "Khách hàng",
-          url: "#",
-        },
-        {
-          title: "Tài xế",
-          url: "/user/driver",
-        },
-        {
-          title: "Cộng tác viên",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Cài đặt",
-      url: "#",
-      icon: Settings2,
-      items: [
-        {
-          title: "Tỉnh thành",
-          url: "#",
-        },
-        {
-          title: "Giá sàn",
-          url: "#",
-        },
-        {
-          title: "Phụ phí",
-          url: "#",
-        },
-        {
-          title: "Hãng xe",
-          url: "#",
-        },
-        {
-          title: "Bảng giá",
-          url: "#",
-        },
-      ],
-    },
-  ],
-  projects: [
-    {
-      name: "Trung tâm báo cáo",
-      url: "/report",
-      icon: PieChart,
-    },
-    {
-      name: "Lịch sử giao dịch",
-      url: "#",
-      icon: Frame,
-    },
-    {
-      name: "Quản lý ví tiền",
-      url: "#",
-      icon: Map,
-    },
-    {
+      {
       name: "Quản lý thông báo",
       url: "/announcement",
       icon: BellPlus,
     },
-  ],
+    ],
 };
 </script>
 

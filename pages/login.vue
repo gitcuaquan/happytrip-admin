@@ -52,6 +52,7 @@
   </div>
 </template>
 <script setup lang="ts">
+import { toast } from "vue-sonner";
 import AdminService from "@/services/AdminService";
 definePageMeta({
   layout: "blank",
@@ -78,7 +79,7 @@ async function handlerSubmit() {
     loading.value = true;
     await AdminService.login(user.value.phone, user.value.password);
   } catch (error) {
-    console.log(error);
+    toast.error((error as any).data);
   } finally {
     loading.value = false;
   } 
