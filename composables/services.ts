@@ -4,6 +4,7 @@ import ReportService from "~/services/ReportService";
 import WalletService from "~/services/WalletService";
 import AddressService from "~/services/AddressService";
 import OrderCancelService from "@/services/OrderCancelServices";
+import WithdrawService from "@/services/WithdrawService";
 
 export const useServices = () => {
 
@@ -19,12 +20,17 @@ export const useServices = () => {
   const addressService = new AddressService();
   // services hủy đơn hàng
   const orderCancelService = new OrderCancelService();
+  // services rút tiền
+  const withdrawService = new WithdrawService();
   return {
+    /** Serives order */
     $OrderService: orderService,
     $ReportService: reportService,
     $WalletService: walletService,
     $PartnerService: partnerService,
     $AddressService: addressService,
-    $OrderCancelService: orderCancelService
+    $OrderCancelService: orderCancelService,
+    /** Service rút tiền */
+    $WithdrawService: withdrawService
   }
 }
