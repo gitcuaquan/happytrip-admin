@@ -3,6 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+"build-iis": "npx nuxi build --preset=iis_node",
     "build": "nuxt build",
     "dev": "nuxt dev -o",
     "generate": "nuxt generate",
