@@ -25,7 +25,7 @@ import {
   BellPlus,
 } from "lucide-vue-next";
 import AdminService from "~/services/AdminService";
-
+const {breadcrum} = useBreadcrum();
 // This is sample data.
 const data = {
   user: {
@@ -308,15 +308,16 @@ const data = {
           <Separator orientation="vertical" class="mr-2 h-4" />
           <Breadcrumb>
             <BreadcrumbList>
-              <BreadcrumbItem class="hidden md:block">
-                <BreadcrumbLink as-child>
-                  <nuxt-link to="/">Tổng quan</nuxt-link>
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator class="hidden md:block" />
-              <BreadcrumbItem>
-                <BreadcrumbPage>Data Fetching</BreadcrumbPage>
-              </BreadcrumbItem>
+              <template v-for="item in breadcrum" :key="item.name">
+
+                <BreadcrumbItem :class="item !== breadcrum[breadcrum.length - 1] ? 'hidden md:block' : ''">
+                  <BreadcrumbLink :to="item.to">
+                    {{ item.name }}
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator v-if="item !== breadcrum[breadcrum.length - 1]" class="hidden md:block" />
+              </template>
+      
             </BreadcrumbList>
           </Breadcrumb>
         </div>

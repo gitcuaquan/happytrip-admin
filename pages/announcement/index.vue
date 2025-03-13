@@ -1,9 +1,9 @@
 <template>
   <Card>
     <CardContent class="p-3 flex w-full items-center">
-     <div class="ms-auto">
-      <NotifiModuleAct  @update="onUpdate" :data="itemEdit" v-model="open" />
-     </div>
+      <div class="ms-auto">
+        <NotifiModuleAct @update="onUpdate" :data="itemEdit" v-model="open" />
+      </div>
     </CardContent>
   </Card>
   <ScrollArea class="h-[calc(100vh-220px)] shadow-sm">
@@ -43,12 +43,8 @@
               >
                 <Trash2 />
               </Button>
-              <Button
-                :variant="'ghost'"
-                size="sm"
-                @click="handleUpdate(item)"
-              >
-              <SquarePen />
+              <Button :variant="'ghost'" size="sm" @click="handleUpdate(item)">
+                <SquarePen />
               </Button>
             </div>
           </TableCell>
@@ -75,9 +71,16 @@
 import type { IAnnouncement } from "@/model/announcement";
 import type { FilterOnParams } from "@/model/common";
 import type { RsData } from "@/model/interface";
+import { useTitle } from "@vueuse/core";
 import { format } from "date-fns";
-import { Trash2,SquarePen } from "lucide-vue-next";
+import { Trash2, SquarePen } from "lucide-vue-next";
 import { toast } from "vue-sonner";
+
+useBreadcrum([
+  { name: "Tổng quan", to: "/" },
+  { name: "Quản lý thông báo", to: "/announcement" },
+]);
+useTitle("Quản lý thông báo");
 
 const { $AnnouncementService } = useServices();
 const params = ref<FilterOnParams>({
@@ -90,11 +93,14 @@ const open = ref<boolean>(false);
 const itemEdit = ref<IAnnouncement | null>(null);
 
 const announcementData = ref<RsData<IAnnouncement>>();
-  watch(()=>open.value, (value) => {
+watch(
+  () => open.value,
+  (value) => {
     if (!value) {
       itemEdit.value = null;
     }
-  });
+  }
+);
 
 watch(params, () => fetchAnnouncements(), { deep: true });
 
@@ -130,13 +136,15 @@ const handleAction = async (id?: string) => {
   }
 };
 
-const handleUpdate = (item:IAnnouncement) => {
+const handleUpdate = (item: IAnnouncement) => {
   itemEdit.value = item;
   open.value = true;
 };
 
 const onUpdate = (data: IAnnouncement) => {
-  const index = announcementData.value?.data.findIndex((item) => item.id === data.id);
+  const index = announcementData.value?.data.findIndex(
+    (item) => item.id === data.id
+  );
   if (index !== undefined && index !== -1) {
     announcementData.value!.data[index] = data;
   }
