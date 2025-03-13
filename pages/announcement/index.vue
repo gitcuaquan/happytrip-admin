@@ -90,6 +90,11 @@ const open = ref<boolean>(false);
 const itemEdit = ref<IAnnouncement | null>(null);
 
 const announcementData = ref<RsData<IAnnouncement>>();
+  watch(()=>open.value, (value) => {
+    if (!value) {
+      itemEdit.value = null;
+    }
+  });
 
 watch(params, () => fetchAnnouncements(), { deep: true });
 

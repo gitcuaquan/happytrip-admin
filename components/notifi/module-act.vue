@@ -7,7 +7,7 @@
       class="w-[90vw] md:w-[450px] grid-rows-[auto_minmax(0,1fr)_auto] p-0 max-h-[90dvh]"
     >
       <DialogHeader class="p-6 pb-0">
-        <DialogTitle>Tạo thông báo</DialogTitle>
+        <DialogTitle>{{ props.data?.id ? 'Cập nhật' : 'Tạo mới' }} thông báo</DialogTitle>
       </DialogHeader>
       <div class="grid gap-4 py-4 grid-cols-12 overflow-y-auto px-6">
         <!-- nội dung text -->
@@ -24,23 +24,23 @@
               label="Đính kèm ảnh"
               @change="onInputChanged"
               type="file"
-              accept=".pdf,.jpeg,.jpg,.png"
-              placeholder="Chọn ảnh đính kèm"
+              accept="application/pdf"
+              placeholder="Chọn file đính kèm"
             />
             <a
             v-if="data.file"
               :href="data.file"
               target="_blank"
-              class="flex items-center gap-2"
+              class="flex text-truncate items-center gap-2"
             >
               <SquareArrowOutUpRight />
-              {{ data.file?.substring(data.file.lastIndexOf("/") + 1) }}
+              Click để xem file đính kèm
             </a>
           </div>
         </div>
       </div>
       <DialogFooter class="p-6 pt-0">
-        <Button :loading="loading" @click="onSave"> Lưu Thông Báo </Button>
+        <Button :loading="loading" @click="onSave"> {{ props.data?.id ? 'Cập nhật' : 'Lưu Thông Báo' }} </Button>
       </DialogFooter>
     </DialogContent>
   </Dialog>
@@ -50,7 +50,6 @@
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -73,20 +72,33 @@ const data = ref<IAnnouncement>({
   file: null,
 });
 
-onMounted(() => {
-  if (props.data) {
-    data.value = JSON.parse(JSON.stringify(props.data));
-  }
-});
-
 watch(
   () => props.data,
   (value) => {
     if (value) {
       data.value = JSON.parse(JSON.stringify(value));
+      file.value = null;
+    }
+  },
+  { immediate: true, deep: true }
+);
+
+watch(
+  () => open.value,
+  (value) => {
+    if (!value) {
+      data.value = {
+        title: "",
+        file: null,
+      };
+      file.value = null;
+    }else{
+      if(props.data){
+        data.value = JSON.parse(JSON.stringify(props.data));
+      }
     }
   }
-);
+);  
 
 const file = ref<File | null>(null);
 
@@ -135,6 +147,7 @@ async function onSave() {
     });
     toast.success("Thông báo đã được lưu thành công.");
   }
+  // reset dữ liệu
   loading.value = false;
   open.value = false;
 }
