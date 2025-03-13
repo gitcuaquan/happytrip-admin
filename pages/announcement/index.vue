@@ -1,7 +1,9 @@
 <template>
   <Card>
-    <CardContent class="p-3">
-      <NotifiModuleAct />
+    <CardContent class="p-3 flex w-full items-center">
+     <div class="ms-auto">
+      <NotifiModuleAct  @update="onUpdate" :data="itemEdit" v-model="open" />
+     </div>
     </CardContent>
   </Card>
   <ScrollArea class="h-[calc(100vh-220px)] shadow-sm">
@@ -32,14 +34,23 @@
           <!-- Added to display related image -->
           <!-- Cột action -->
           <TableCell class="w-[10px]">
-            <Button
-              :variant="'ghost'"
-              size="sm"
-              class="text-red-500"
-              @click="handleAction(item?.id)"
-            >
-              <Trash2 />
-            </Button>
+            <div class="flex flex-nowrap">
+              <Button
+                :variant="'ghost'"
+                size="sm"
+                class="text-red-500"
+                @click="handleAction(item?.id)"
+              >
+                <Trash2 />
+              </Button>
+              <Button
+                :variant="'ghost'"
+                size="sm"
+                @click="handleUpdate(item)"
+              >
+              <SquarePen />
+              </Button>
+            </div>
           </TableCell>
         </TableRow>
       </TableBody>
@@ -65,7 +76,7 @@ import type { IAnnouncement } from "@/model/announcement";
 import type { FilterOnParams } from "@/model/common";
 import type { RsData } from "@/model/interface";
 import { format } from "date-fns";
-import { Trash2 } from "lucide-vue-next";
+import { Trash2,SquarePen } from "lucide-vue-next";
 import { toast } from "vue-sonner";
 
 const { $AnnouncementService } = useServices();
@@ -75,7 +86,12 @@ const params = ref<FilterOnParams>({
 });
 const loading = ref<boolean>(true);
 
+const open = ref<boolean>(false);
+const itemEdit = ref<IAnnouncement | null>(null);
+
 const announcementData = ref<RsData<IAnnouncement>>();
+
+watch(params, () => fetchAnnouncements(), { deep: true });
 
 const fetchAnnouncements = async () => {
   loading.value = true; // set loading to true when fetching starts
@@ -109,6 +125,19 @@ const handleAction = async (id?: string) => {
   }
 };
 
+const handleUpdate = (item:IAnnouncement) => {
+  itemEdit.value = item;
+  open.value = true;
+};
+
+const onUpdate = (data: IAnnouncement) => {
+  const index = announcementData.value?.data.findIndex((item) => item.id === data.id);
+  if (index !== undefined && index !== -1) {
+    announcementData.value!.data[index] = data;
+  }
+  itemEdit.value = null;
+};
+// Fetch announcements when component is mounted
 fetchAnnouncements();
 </script>
 

@@ -1,7 +1,7 @@
 <template>
-  <Dialog>
-    <DialogTrigger as-child>
-      <Button variant="outline"> Tạo Thông Báo </Button>
+  <Dialog v-model:open="open">
+    <DialogTrigger>
+      <Button ><BellPlus /> Tạo Mới </Button>
     </DialogTrigger>
     <DialogContent
       class="w-[90vw] md:w-[450px] grid-rows-[auto_minmax(0,1fr)_auto] p-0 max-h-[90dvh]"
@@ -13,14 +13,29 @@
         <!-- nội dung text -->
         <div class="col-span-12">
           <div class="flex flex-col gap-4">
-            <Input v-model="data.title" label="Tiêu đề" placeholder="Nhập tiêu đề thông báo" />
+            <Label>Tiêu đề </Label>
             <Input
-            label="Đính kèm ảnh"
-            @change="onInputChanged"
-            type="file"
-            accept=".pdf,.jpeg,.jpg,.png"
-            placeholder="Chọn ảnh đính kèm"
-          />
+              v-model="data.title"
+              label="Tiêu đề"
+              placeholder="Nhập tiêu đề thông báo"
+            />
+            <Label>File đính kèm</Label>
+            <Input
+              label="Đính kèm ảnh"
+              @change="onInputChanged"
+              type="file"
+              accept=".pdf,.jpeg,.jpg,.png"
+              placeholder="Chọn ảnh đính kèm"
+            />
+            <a
+            v-if="data.file"
+              :href="data.file"
+              target="_blank"
+              class="flex items-center gap-2"
+            >
+              <SquareArrowOutUpRight />
+              {{ data.file?.substring(data.file.lastIndexOf("/") + 1) }}
+            </a>
           </div>
         </div>
       </div>
@@ -32,7 +47,6 @@
 </template>
 
 <script lang="ts" setup>
-import { Trash2 } from "lucide-vue-next";
 import {
   Dialog,
   DialogContent,
@@ -43,13 +57,37 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import type { IAnnouncement } from "@/model/announcement";
+import { BellPlus, SquareArrowOutUpRight } from "lucide-vue-next";
+import { toast } from "vue-sonner";
 
+
+const emit = defineEmits(["update"]);
+const props = defineProps<{
+  data?: IAnnouncement | null;
+}>();
+const open = defineModel({ default: false });
 const { $AnnouncementService } = useServices();
 const loading = ref<boolean>(false);
 const data = ref<IAnnouncement>({
   title: "",
   file: null,
 });
+
+onMounted(() => {
+  if (props.data) {
+    data.value = JSON.parse(JSON.stringify(props.data));
+  }
+});
+
+watch(
+  () => props.data,
+  (value) => {
+    if (value) {
+      data.value = JSON.parse(JSON.stringify(value));
+    }
+  }
+);
+
 const file = ref<File | null>(null);
 
 function onInputChanged(event: Event) {
@@ -61,17 +99,45 @@ function onInputChanged(event: Event) {
 
 async function onSave() {
   loading.value = true;
-// tải ảnh lên server
- const _data = await $AnnouncementService.uploadImage(file.value as File);
-// tạo thông báo
- const a =   await $AnnouncementService.addAnnouncement({
-    title: data.value.title,
-    file: (_data as any).url,
-  });
+  if (props.data) {
+    if (!data.value.file) {
+      toast.error("Vui lòng chọn file đính kèm");
+      loading.value = false;
+      return;
+    }
+    // nếu có file mới thì tải lên server
+    if(file.value){
+      const _data = await $AnnouncementService.uploadImage(file.value as File);
+      data.value.file = (_data as any).url;
+    }
+    // cập nhật thông báo
+    await $AnnouncementService.updateAnnouncement({
+      id: props.data.id,
+      title: data.value.title,
+      file: data.value.file,
+    });
+    // emit sự kiện cập nhật thông báo
+    emit("update", data.value);
+    // thông báo thành công
+    toast.success("Thông báo đã được cập nhật thành công.");
+  } else {
+    if (!file.value) {
+      toast.error("Vui lòng chọn file đính kèm");
+      loading.value = false;
+      return;
+    }
+    // tải ảnh lên server
+    const _data = await $AnnouncementService.uploadImage(file.value as File);
+    // tạo thông báo
+     await $AnnouncementService.addAnnouncement({
+      title: data.value.title,
+      file: (_data as any).url,
+    });
+    toast.success("Thông báo đã được lưu thành công.");
+  }
   loading.value = false;
+  open.value = false;
 }
-
-
 </script>
 
 <style></style>
