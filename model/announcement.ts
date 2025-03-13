@@ -1,7 +1,7 @@
 export interface IAnnouncement {
-    id?: number;
+    id?: string;
     title?: string;
     file?: any;
-    create_at?: string;
+    created_at?: string;
 }
 

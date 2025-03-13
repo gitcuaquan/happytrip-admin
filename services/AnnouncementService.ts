@@ -45,4 +45,41 @@ export default class AnnouncementService extends Service {
             }
         });
     }
+    public deleteAnnouncement(id: string) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const res = await this.$AuthFetch(`${this.BASE_URL}/announcements/${id}`, {
+                    method: 'DELETE'
+                });
+                resolve(res);
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+    public updateAnnouncement(announcement: IAnnouncement) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const res = await this.$AuthFetch<IAnnouncement>(`${this.BASE_URL}/announcements/${announcement.id}`, {
+                    method: 'PUT',
+                    body: JSON.stringify(announcement)
+                });
+                resolve(res);
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+    public getAnnouncementById(id: string) {
+        return new Promise<IAnnouncement>(async (resolve, reject) => {
+            try {
+                const res = await this.$AuthFetch<IAnnouncement>(`${this.BASE_URL}/announcements/${id}`, {
+                    method: 'GET'
+                });
+                resolve(res);
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
 }
