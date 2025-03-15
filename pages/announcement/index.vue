@@ -76,7 +76,7 @@ import { format } from "date-fns";
 import { Trash2, SquarePen } from "lucide-vue-next";
 import { toast } from "vue-sonner";
 
-useBreadcrum([
+useBreadcrum().setBreadcrum([
   { name: "Tổng quan", to: "/" },
   { name: "Quản lý thông báo", to: "/announcement" },
 ]);

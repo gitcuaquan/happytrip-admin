@@ -311,7 +311,12 @@ const data = {
               <template v-for="item in breadcrum" :key="item.name">
 
                 <BreadcrumbItem :class="item !== breadcrum[breadcrum.length - 1] ? 'hidden md:block' : ''">
-                  <BreadcrumbLink :to="item.to">
+                  <BreadcrumbLink  v-if="item !== breadcrum[breadcrum.length - 1]">
+                    <NuxtLink :to="item.to">
+                      {{ item.name }}
+                    </NuxtLink>
+                  </BreadcrumbLink>
+                  <BreadcrumbLink :to="item.to" v-else>
                     {{ item.name }}
                   </BreadcrumbLink>
                 </BreadcrumbItem>

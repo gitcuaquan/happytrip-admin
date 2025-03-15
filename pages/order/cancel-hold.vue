@@ -19,7 +19,11 @@ import type { OrderCancelItem, OrderFilter } from "@/model/order";
 import { addDays, format } from "date-fns";
 
 const { $OrderCancelService } = useServices();
-
+useBreadcrum().setBreadcrum([
+  { name: "Tổng quan", to: "/" },
+  { name: "Quản lý đơn hàng", to: "/order" },
+  { name: "Đơn đã hủy" },
+]);
 const orderData = ref<RsData<OrderCancelItem>>();
 
 const loading = ref<boolean>(true);

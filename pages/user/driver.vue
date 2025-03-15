@@ -9,7 +9,7 @@
           <TableHead>Số điện thoại</TableHead>
           <TableHead>Phương tiện</TableHead>
           <TableHead>Biển số</TableHead>
-          <TableHead> Ngày đăng ký</TableHead>
+          <TableHead>Năm đăng ký</TableHead>
           <TableHead>	Trạng thái</TableHead>
           <!-- Cột action -->
           <TableHead class="w-[10px]"> </TableHead>
@@ -30,8 +30,12 @@
           <TableCell>
             {{ item.transport.license_plate }}
           </TableCell>
+
           <TableCell>
-            {{ format(item.created_at, "dd/MM/yyyy") }}
+            {{  item.transport.created_year }}
+          </TableCell>
+          <TableCell>
+            {{ item.status_name}}
           </TableCell>
           <TableCell>
             <Button variant="ghost" size="sm">
@@ -56,10 +60,19 @@ import { format } from "date-fns";
 import { FilterOnParams } from "~/model/common";
 import type { RsData } from "~/model/interface";
 import type { Partner } from "~/model/partner";
+import {Ellipsis} from "lucide-vue-next"
+import { useTitle } from "@vueuse/core";
 
+
+useTitle("Danh sách tài xế");
+useBreadcrum().setBreadcrum([
+  { name: "Trang chủ", to: "/" },
+  { name: "Danh sách tài xế" },
+]);
 const { $PartnerService } = useServices();
 // params
-const params = ref<FilterOnParams>(new FilterOnParams({limit:50}));
+const params = ref<FilterOnParams>(new FilterOnParams({limit:50
+}));
 // filter
 const filter = ref({});
 // State

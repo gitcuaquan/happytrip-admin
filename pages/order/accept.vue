@@ -31,6 +31,12 @@ import { eOrderStatus, OrderFilter, type IOrder } from "@/model/order";
 import { addDays, format } from "date-fns";
 import { FolderDown, FilePlus2 } from "lucide-vue-next";
 
+useBreadcrum().setBreadcrum([
+  { name: "Tổng quan", to: "/" },
+  { name: "Quản lý đơn hàng", to: "/order" },
+  { name: "Đơn đã được xác nhận" },
+]);
+
 const { $OrderService } = useServices();
 
 const orderData = ref<RsData<IOrder>>();

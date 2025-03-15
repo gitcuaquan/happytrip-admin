@@ -110,6 +110,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+useBreadcrum().setBreadcrum([
+  { name: "Tổng quan", to: "/" },
+  { name: "Ví" },
+  { name: "Danh sách ví" },
+]);
+
 const { $WalletService } = useServices();
 
 const keyword = useDebouncedRef("", 300);

@@ -6,7 +6,11 @@
 import type { FilterOnParams } from '@/model/common';
 import type { WithdrawFilter } from '@/model/withdraw';
 import { addDays, format } from 'date-fns';
-
+useBreadcrum().setBreadcrum([
+  { name: "Tổng quan", to: "/" },
+  { name: "Ví" },
+  { name: "Danh lệnh rút tiền" },
+]);
 
 const {$WithdrawService } = useServices()
 
