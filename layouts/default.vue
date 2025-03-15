@@ -25,7 +25,7 @@ import {
   BellPlus,
 } from "lucide-vue-next";
 import AdminService from "~/services/AdminService";
-const {breadcrum} = useBreadcrum();
+const { breadcrum } = useBreadcrum();
 // This is sample data.
 const data = {
   user: {
@@ -35,123 +35,123 @@ const data = {
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWrLzlCvzW9PJ6RDf_dUMIeG2khQ6zFGKXFw&s",
   },
   navMain: [
-      {
-        title: "Quản lý chuyến đi",
-        icon: SquareTerminal,
-        isActive: true,
-        items: [
-          {
-            title: "Đang chờ tài xế",
-            url: "/order",
-          },
-          {
-            title: "Đã được nhận ",
-            url: "/order/accept",
-          },
-          {
-            title: "Đã hoàn thành",
-            url: "/order/success",
-          },
-          {
-            title: "Đã bị hủy",
-            url: "/order/cancel-hold",
-          },
-          {
-            title: "Lệnh hủy chuyến",
-            url: "/order/cancel-waiting",
-          },
-        ],
-      },
-      {
-        title: "Quản lý tài chính",
-        url: "#",
-        icon: Bot,
-        isActive: true,
-        items: [
-          {
-            title: "Danh sách ví",
-            url: "/finance/wallet-list",
-          },
-          {
-            title: "Lệnh rút tiền",
-            url: "/finance/listwithdraw",
-          },
-          {
-            title: "Lịch sử giao dịch",
-            url: "#",
-          },
-        ],
-      },
-      {
-        title: "Quản lý nhân sự",
-        url: "#",
-        icon: BookOpen,
-        isActive: true,
-        items: [
-          {
-            title: "Khách hàng",
-            url: "#",
-          },
-          {
-            title: "Tài xế",
-            url: "/user/driver",
-          },
-          {
-            title: "Cộng tác viên",
-            url: "#",
-          },
-        ],
-      },
-      {
-        title: "Cài đặt",
-        url: "#",
-        icon: Settings2,
-        items: [
-          {
-            title: "Tỉnh thành",
-            url: "#",
-          },
-          {
-            title: "Giá sàn",
-            url: "#",
-          },
-          {
-            title: "Phụ phí",
-            url: "#",
-          },
-          {
-            title: "Hãng xe",
-            url: "#",
-          },
-          {
-            title: "Bảng giá",
-            url: "#",
-          },
-        ],
-      },
-    ],
-    projects: [
-      {
-        name: "Trung tâm báo cáo",
-        url: "/report",
-        icon: PieChart,
-      },
-      {
-        name: "Lịch sử giao dịch",
-        url: "#",
-        icon: Frame,
-      },
-      {
-        name: "Quản lý ví tiền",
-        url: "#",
-        icon: Map,
-      },
-      {
+    {
+      title: "Quản lý chuyến đi",
+      icon: SquareTerminal,
+      isActive: true,
+      items: [
+        {
+          title: "Đang chờ tài xế",
+          url: "/order",
+        },
+        {
+          title: "Đã được nhận ",
+          url: "/order/accept",
+        },
+        {
+          title: "Đã hoàn thành",
+          url: "/order/success",
+        },
+        {
+          title: "Đã bị hủy",
+          url: "/order/cancel-hold",
+        },
+        {
+          title: "Lệnh hủy chuyến",
+          url: "/order/cancel-waiting",
+        },
+      ],
+    },
+    {
+      title: "Quản lý tài chính",
+      url: "#",
+      icon: Bot,
+      isActive: true,
+      items: [
+        {
+          title: "Danh sách ví",
+          url: "/finance/wallet-list",
+        },
+        {
+          title: "Lệnh rút tiền",
+          url: "/finance/listwithdraw",
+        },
+        {
+          title: "Lịch sử giao dịch",
+          url: "/finance/transaction",
+        },
+      ],
+    },
+    {
+      title: "Quản lý nhân sự",
+      url: "#",
+      icon: BookOpen,
+      isActive: true,
+      items: [
+        {
+          title: "Khách hàng",
+          url: "#",
+        },
+        {
+          title: "Tài xế",
+          url: "/user/driver",
+        },
+        {
+          title: "Cộng tác viên",
+          url: "#",
+        },
+      ],
+    },
+    {
+      title: "Cài đặt",
+      url: "#",
+      icon: Settings2,
+      items: [
+        {
+          title: "Tỉnh thành",
+          url: "#",
+        },
+        {
+          title: "Giá sàn",
+          url: "#",
+        },
+        {
+          title: "Phụ phí",
+          url: "#",
+        },
+        {
+          title: "Hãng xe",
+          url: "#",
+        },
+        {
+          title: "Bảng giá",
+          url: "#",
+        },
+      ],
+    },
+  ],
+  projects: [
+    {
+      name: "Trung tâm báo cáo",
+      url: "/report",
+      icon: PieChart,
+    },
+    {
+      name: "Lịch sử giao dịch",
+      url: "#",
+      icon: Frame,
+    },
+    {
+      name: "Quản lý ví tiền",
+      url: "#",
+      icon: Map,
+    },
+    {
       name: "Quản lý thông báo",
       url: "/announcement",
       icon: BellPlus,
     },
-    ],
+  ],
 };
 </script>
 
@@ -306,25 +306,36 @@ const data = {
         <div class="flex items-center gap-2 px-4">
           <SidebarTrigger class="-ml-1" />
           <Separator orientation="vertical" class="mr-2 h-4" />
-          <Breadcrumb>
-            <BreadcrumbList>
-              <template v-for="item in breadcrum" :key="item.name">
-
-                <BreadcrumbItem :class="item !== breadcrum[breadcrum.length - 1] ? 'hidden md:block' : ''">
-                  <BreadcrumbLink  v-if="item !== breadcrum[breadcrum.length - 1]">
-                    <NuxtLink :to="item.to">
+          <ClientOnly>
+            <Breadcrumb>
+              <BreadcrumbList>
+                <template v-for="item in breadcrum" :key="item.name">
+                  <BreadcrumbItem
+                    :class="
+                      item !== breadcrum[breadcrum.length - 1]
+                        ? 'hidden md:block'
+                        : ''
+                    "
+                  >
+                    <BreadcrumbLink
+                      v-if="item !== breadcrum[breadcrum.length - 1]"
+                    >
+                      <NuxtLink :to="item.to">
+                        {{ item.name }}
+                      </NuxtLink>
+                    </BreadcrumbLink>
+                    <BreadcrumbLink :to="item.to" v-else>
                       {{ item.name }}
-                    </NuxtLink>
-                  </BreadcrumbLink>
-                  <BreadcrumbLink :to="item.to" v-else>
-                    {{ item.name }}
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator v-if="item !== breadcrum[breadcrum.length - 1]" class="hidden md:block" />
-              </template>
-      
-            </BreadcrumbList>
-          </Breadcrumb>
+                    </BreadcrumbLink>
+                  </BreadcrumbItem>
+                  <BreadcrumbSeparator
+                    v-if="item !== breadcrum[breadcrum.length - 1]"
+                    class="hidden md:block"
+                  />
+                </template>
+              </BreadcrumbList>
+            </Breadcrumb>
+          </ClientOnly>
         </div>
       </header>
       <div class="flex flex-1 flex-col gap-4 p-4 pt-0">

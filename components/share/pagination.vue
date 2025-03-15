@@ -1,5 +1,14 @@
 <script setup lang="ts">
-
+import {
+  Pagination,
+  PaginationEllipsis,
+  PaginationFirst,
+  PaginationLast,
+  PaginationList,
+  PaginationListItem,
+  PaginationNext,
+  PaginationPrev,
+} from '@/components/ui/pagination'
 defineProps({
   total: Number,
   siblingCount: {

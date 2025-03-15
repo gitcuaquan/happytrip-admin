@@ -6,8 +6,11 @@ import AddressService from "~/services/AddressService";
 import OrderCancelService from "@/services/OrderCancelServices";
 import WithdrawService from "@/services/WithdrawService";
 import AnnouncementService from "~/services/AnnouncementService";
+import TransactionService from "@/services/TransactionService";
 
 export const useServices = () => {
+  // services transaction
+  const transactionService = new TransactionService();
 
   // services báo cáo
   const reportService = new ReportService();
@@ -25,7 +28,9 @@ export const useServices = () => {
   const withdrawService = new WithdrawService();
   const announcementService = new AnnouncementService();
   return {
-    /** Serives order */
+    /** Services transaction */
+    $TransactionService: transactionService,
+    /** Services order */
     $AnnouncementService: announcementService,
     $OrderService: orderService,
     $ReportService: reportService,
