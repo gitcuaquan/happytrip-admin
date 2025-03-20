@@ -12,7 +12,7 @@ export default class WithdrawService extends Service {
     list(params:FilterOnParams,filter:WithdrawFilter):Promise<RsData<IWithdraw>> {
         return new Promise( async(resolve, reject) => {
             try {
-                const response = await this.$AuthFetch<RsData<IWithdraw>>(this.SERVICE_URL, {
+                const response = await this.$AuthFetch<RsData<IWithdraw>>(this.SERVICE_URL + '/list', {
                     method: 'POST',
                     params: params,
                     body: JSON.stringify(filter)
