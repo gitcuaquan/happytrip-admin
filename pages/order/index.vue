@@ -29,21 +29,12 @@
       </Tooltip>
     </TooltipProvider>
     <!-- Tạo đơn -->
-    <TooltipProvider>
-      <Tooltip>
-        <TooltipTrigger as-child>
-          <Button size="sm">
-            <FilePlus2 :size="30" />
-          </Button>
-        </TooltipTrigger>
-        <TooltipContent>
-          <p>Tạo đơn</p>
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
+    <OrderModalAct />
   </OrderModuleFilter>
   <OrderModuleList :loading="loading" :orders="orderData?.data" />
-  <template v-if="orderData && orderData.pagination && orderData.pagination.count > 0">
+  <template
+    v-if="orderData && orderData.pagination && orderData.pagination.count > 0"
+  >
     <SharePagination
       :total="orderData.pagination.count"
       :items-per-page="params.limit"
@@ -57,7 +48,7 @@ import type { FilterOnParams } from "@/model/common";
 import type { RsData } from "@/model/interface";
 import { eOrderStatus, OrderFilter, type IOrder } from "@/model/order";
 import { addDays, format } from "date-fns";
-import { FolderDown, FilePlus2 } from "lucide-vue-next";
+import { FolderDown } from "lucide-vue-next";
 useBreadcrum().setBreadcrum([
   { name: "Tổng quan", to: "/" },
   { name: "Quản lý đơn hàng", to: "/order" },
@@ -85,7 +76,7 @@ const partnerStatus = [
     value: 1,
   },
 ];
-
+const open = ref<boolean>(false);
 const params = ref<FilterOnParams>({
   page: 1,
   limit: 50,
