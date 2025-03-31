@@ -205,7 +205,6 @@ class Order implements IOrder {
     note?: string ;
     constructor(initValue?: IOrder) {
         Object.assign(this, initValue);
-
     }
 }
  enum eTypeOrderCancel {
