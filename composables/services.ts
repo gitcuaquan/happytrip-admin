@@ -1,12 +1,13 @@
-import OrderService from "~/services/OrderService";
-import PartnerService from "~/services/PartnerService";
-import ReportService from "~/services/ReportService";
-import WalletService from "~/services/WalletService";
-import AddressService from "~/services/AddressService";
+import OrderService from "@/services/OrderService";
+import PartnerService from "@/services/PartnerService";
+import ReportService from "@/services/ReportService";
+import WalletService from "@/services/WalletService";
+import AddressService from "@/services/AddressService";
 import OrderCancelService from "@/services/OrderCancelServices";
 import WithdrawService from "@/services/WithdrawService";
-import AnnouncementService from "~/services/AnnouncementService";
+import AnnouncementService from "@/services/AnnouncementService";
 import TransactionService from "@/services/TransactionService";
+import HappytripService from "@/services/HappytripService";
 
 export const useServices = () => {
   // services transaction
@@ -26,7 +27,11 @@ export const useServices = () => {
   const orderCancelService = new OrderCancelService();
   // services rút tiền
   const withdrawService = new WithdrawService();
+  // services thông báo
   const announcementService = new AnnouncementService();
+
+  const happytripService = new HappytripService();
+  
   return {
     /** Services transaction */
     $TransactionService: transactionService,
@@ -39,6 +44,7 @@ export const useServices = () => {
     $AddressService: addressService,
     $OrderCancelService: orderCancelService,
     /** Service rút tiền */
-    $WithdrawService: withdrawService
+    $WithdrawService: withdrawService,
+    $HappytripService: happytripService
   }
 }

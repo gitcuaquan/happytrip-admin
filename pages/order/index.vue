@@ -15,6 +15,10 @@
         </SelectContent>
       </Select>
     </div>
+    <Button @click="openShowAct = true" size="sm">
+        <FilePlus2 :size="30" />
+        Tạo đơn
+      </Button>
     <!-- Tạo file export -->
     <TooltipProvider>
       <Tooltip>
@@ -29,18 +33,18 @@
       </Tooltip>
     </TooltipProvider>
     <!-- Tạo đơn -->
-    <OrderModalAct />
   </OrderModuleFilter>
   <OrderModuleList :loading="loading" :orders="orderData?.data" />
   <template
-    v-if="orderData && orderData.pagination && orderData.pagination.count > 0"
+  v-if="orderData && orderData.pagination && orderData.pagination.count > 0"
   >
-    <SharePagination
-      :total="orderData.pagination.count"
-      :items-per-page="params.limit"
-      v-model="params.page"
-    />
-  </template>
+  <SharePagination
+  :total="orderData.pagination.count"
+  :items-per-page="params.limit"
+  v-model="params.page"
+  />
+</template>
+<OrderModalAct @hidden="openShowAct = false" v-if="openShowAct"  />
 </template>
 
 <script lang="ts" setup>
@@ -48,7 +52,7 @@ import type { FilterOnParams } from "@/model/common";
 import type { RsData } from "@/model/interface";
 import { eOrderStatus, OrderFilter, type IOrder } from "@/model/order";
 import { addDays, format } from "date-fns";
-import { FolderDown } from "lucide-vue-next";
+import { FolderDown,FilePlus2 } from "lucide-vue-next";
 useBreadcrum().setBreadcrum([
   { name: "Tổng quan", to: "/" },
   { name: "Quản lý đơn hàng", to: "/order" },
@@ -57,6 +61,9 @@ useBreadcrum().setBreadcrum([
 const { $OrderService } = useServices();
 
 const orderData = ref<RsData<IOrder>>();
+
+
+  const openShowAct = ref<boolean>(false);
 
 const loading = ref<boolean>(true);
 

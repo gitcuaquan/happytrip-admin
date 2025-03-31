@@ -1,11 +1,5 @@
 <template>
-  <Dialog>
-    <DialogTrigger>
-      <Button size="sm">
-        <FilePlus2 :size="30" />
-        Tạo đơn
-      </Button>
-    </DialogTrigger>
+  <Dialog :default-open="true" @update:open="emit('hidden')">
     <DialogContent
       class="w-[50vw] grid-rows-[auto_minmax(0,1fr)_auto] p-0 max-h-[90dvh]"
     >
@@ -26,13 +20,17 @@
             <Input placeholder="Nhập số điện thoại khách hàng" />
           </div>
         </div>
-        <div class="col-span-3">
+        <div class="col-span-4">
           <div class="flex flex-col gap-2">
             <Label>Ngày đón</Label>
-            <Input type="datetime-local" :min="new Date().toISOString().slice(0, 16)" placeholder="Nhập ngày đón" />
+            <Input
+              type="datetime-local"
+              :min="new Date().toISOString().slice(0, 16)"
+              placeholder="Nhập ngày đón"
+            />
           </div>
         </div>
-        <div class="col-span-3">
+        <div class="col-span-4">
           <div class="flex flex-col gap-2">
             <Label>Dịch vụ</Label>
             <Select>
@@ -40,11 +38,21 @@
                 <SelectValue placeholder="Chọn dịch vụ" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="21323">Chuyển nhà</SelectItem>
-                <SelectItem value="23123">Chuyển văn phòng</SelectItem>
-                <SelectItem value="234">Chuyển nhà trọn gói</SelectItem>
+                <SelectItem
+                  v-for="service in state.happytripData?.data"
+                  :value="service.id"
+                  :key="service.id"
+                >
+                  {{ service.name }}
+                </SelectItem>
               </SelectContent>
             </Select>
+          </div>
+        </div>
+        <div class="col-span-4">
+          <div class="flex flex-col gap-2">
+            <Label>SĐT Tài xế</Label>
+            <Input placeholder="Nhập số điện thoại tài xế" />
           </div>
         </div>
       </div>
@@ -62,10 +70,24 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
-import { BellPlus, SquareArrowOutUpRight, FilePlus2 } from "lucide-vue-next";
-import { toast } from "vue-sonner";
+import type { IHappytripService } from "@/model/happytrip";
+import type { RsData } from "@/model/interface";
+
+const emit = defineEmits(["hidden"]);
+
+const { $HappytripService } = useServices();
+
+const state = reactive({
+  loading: false,
+  happytripData: {} as RsData<IHappytripService>,
+});
+
+onMounted(() => {
+  $HappytripService.getList().then((res) => {
+    state.happytripData = res;
+  });
+});
 </script>
 
 <style></style>
