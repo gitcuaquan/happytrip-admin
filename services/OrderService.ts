@@ -1,5 +1,5 @@
 
-import type { IOrder, IOrderOverviewItem, OrderFilter, OrderPreview } from "@/model/order";
+import type { IOrder, IOrderOverviewItem, Order, OrderFilter, OrderPreview } from "@/model/order";
 import { Service } from "./Service";
 import type { FilterOnParams } from "@/model/common";
 import type { RsData } from "@/model/interface";
@@ -29,7 +29,7 @@ export default class OrderService extends Service {
     async Preview(data:OrderPreview) {
         try {
             const url = this.URL_SERVICE_BASE + '/calc-order';
-            const response = await this.$AuthFetch<OrderPreview>(url, {
+            const response = await this.$AuthFetch<Partial<Order>>(url, {
                 method: 'POST',
                 body: JSON.stringify(data)
             });

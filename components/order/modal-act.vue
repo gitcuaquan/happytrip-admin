@@ -12,7 +12,7 @@
           <div class="flex flex-col gap-2">
             <Label>Tên khách hàng</Label>
             <Input
-              v-model="objOrder.customer!.full_name"
+              v-model="orderCreater.customer!.full_name"
               placeholder="Nhập tên khách hàng"
             />
           </div>
@@ -21,7 +21,7 @@
           <div class="flex flex-col gap-2">
             <Label>SĐT khách hàng</Label>
             <Input
-              v-model="objOrder.customer!.phone"
+              v-model="orderCreater.customer!.phone"
               placeholder="Nhập số điện thoại khách hàng"
             />
           </div>
@@ -61,7 +61,7 @@
           <div class="flex flex-col gap-2">
             <Label>SĐT tài xế</Label>
             <Input
-              v-model="objOrder.partner!.phone"
+              v-model="orderCreater.partner!.phone"
               placeholder="Nhập số điện thoại tài xế"
             />
           </div>
@@ -153,7 +153,7 @@
           <Input placeholder="Giá tiền cần thu" v-model="formattedPriceGuest" />
         </div>
         <div class="col-span-12">
-          {{ objOrder }}
+          {{ orderCreater }}
         </div>
       </div>
       <DialogFooter class="p-6 pt-0">
@@ -201,6 +201,24 @@ const objOrder = ref<Order>(
   })
 );
 
+const orderCreater = ref<Order>(
+  new Order({
+    customer: {},
+    partner: {},
+    departure: {
+      city: "",
+      district: "",
+    },
+    destination: {
+      city: "",
+      district: "",
+    },
+    date_of_destination: "",
+    id_service: "",
+    price_guest: 0,
+  })
+);
+
 // Định dạng hiển thị tiền tệ VND
 const formattedPriceGuest = computed({
   get: () => {
@@ -219,8 +237,6 @@ const formattedPriceGuest = computed({
       : "0";
   },
 });
-
-const objecPreview = ref<OrderPreview>(new OrderPreview());
 
 const params = ref<FilterOnParams>({
   fields: "id,name,status",
@@ -252,7 +268,6 @@ onMounted(() => {
   $HappytripService.getList().then((res) => {
     state.happytripData = res;
     objOrder.value.id_service = res.data[0].id;
-    objecPreview.value.id_service = res.data[0].id;
   });
 });
 
@@ -263,7 +278,7 @@ watch(
     timeOut.value = setTimeout(async () => {
       // tranform data Order to OrderPreview
       const { date_of_destination, id_service } = objOrder.value;
-      objecPreview.value = new OrderPreview({
+      const objPrev = new OrderPreview({
         date_of_destination,
         id_service,
         departure_city: objOrder.value.departure?.city,
@@ -284,12 +299,17 @@ watch(
       ) {
         return;
       }
-  
-      const a = await $OrderService.Preview(objecPreview.value);
-      console.log("🚀 ~ watchEffect ~ a :", a);
 
+      const newOrder = await $OrderService.Preview(objPrev);
+
+      newOrder.customer = objOrder.value.customer;
+      newOrder.partner = objOrder.value.partner;
+
+      orderCreater.value = new Order({
+        ...newOrder
+      });
+      // console.log("objOrder.value", objOrder.value);
     }, 1000);
-
   },
   { deep: true }
 );
