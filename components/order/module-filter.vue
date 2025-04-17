@@ -1,6 +1,6 @@
 <template>
   <Card class="p-3 grid grid-cols-12 items-center gap-4">
-    <div class="col-span-2">
+    <div class="2xl:col-span-2  xl:col-span-3">
       <!-- Input tìm kiếm -->
       <div class="relative w-full max-w-sm items-center">
         <Input
@@ -17,7 +17,7 @@
         </span>
       </div>
     </div>
-    <div class="col-span-3">
+    <div class="2xl:col-span-3 xl:col-span-5">
       <div class="flex flex-nowrap gap-4">
         <Select v-model="state.citySelected.from">
           <SelectTrigger>
@@ -50,7 +50,7 @@
         </Select>
       </div>
     </div>
-    <div class="col-span-3">
+    <div class="2xl:col-span-3 xl:col-span-5">
       <div class="flex flex-nowrap gap-4">
         <Select v-model="state.citySelected.to">
           <SelectTrigger>
@@ -80,7 +80,7 @@
         </Select>
       </div>
     </div>
-    <div class="col-span-4">
+    <div class="2xl:col-span-4">
       <div class="flex gap-4 items-center">
         <ShareDataPicker
           @update="handleUpdate"
@@ -108,6 +108,7 @@ import {
 } from "@/components/ui/select";
 import type { City, ResponeDistricts } from "~/model/address";
 import { OrderFilter } from "@/model/order";
+import { endOfDay, startOfDay } from "date-fns";
 
 const { $AddressService } = useServices();
 
@@ -138,8 +139,8 @@ const state = reactive({
 });
 
 const handleUpdate = (dates: { start: string; end: string }) => {
-  props.filter.from_date_of_destination = dates.start;
-  props.filter.to_date_of_destination = dates.end;
+  props.filter.from_date_of_destination = startOfDay(dates.start);
+  props.filter.to_date_of_destination = endOfDay(dates.end);
 };
 
 onMounted(() => {

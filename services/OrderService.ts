@@ -1,5 +1,5 @@
 
-import type { IOrder, IOrderOverviewItem, OrderFilter } from "@/model/order";
+import type { IOrder, IOrderOverviewItem, OrderFilter, OrderPreview } from "@/model/order";
 import { Service } from "./Service";
 import type { FilterOnParams } from "@/model/common";
 import type { RsData } from "@/model/interface";
@@ -24,6 +24,20 @@ export default class OrderService extends Service {
                 reject(error);
             }
         });
+    }
+
+    async Preview(data:OrderPreview) {
+        try {
+            const url = this.URL_SERVICE_BASE + '/calc-order';
+            const response = await this.$AuthFetch<OrderPreview>(url, {
+                method: 'POST',
+                body: JSON.stringify(data)
+            });
+            return response;
+        } catch (error) {
+            console.error("Error fetching order preview:", error);
+            throw error;
+        }
     }
 
     async list(params:FilterOnParams,filter:OrderFilter) {
