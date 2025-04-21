@@ -8,7 +8,7 @@
       </DialogHeader>
       <div class="grid gap-4 py-4 grid-cols-12 overflow-y-auto px-6">
         <!-- nội dung text -->
-        <div class="col-span-6">
+        <div class="col-span-4">
           <div class="flex flex-col gap-2">
             <Label>Tên khách hàng</Label>
             <Input
@@ -17,7 +17,7 @@
             />
           </div>
         </div>
-        <div class="col-span-6">
+        <div class="col-span-4">
           <div class="flex flex-col gap-2">
             <Label>SĐT khách hàng</Label>
             <Input
@@ -25,6 +25,10 @@
               placeholder="Nhập số điện thoại khách hàng"
             />
           </div>
+        </div>
+        <div class="col-span-4">
+          <Label>Thu khách</Label>
+          <Input placeholder="Giá tiền cần thu" v-model="objOrder.price_guest" />
         </div>
         <hr class="col-span-12 border-t border-gray-200" />
         <div class="col-span-4">
@@ -105,7 +109,7 @@
         </div>
         <div class="col-span-4">
           <Label>Chi tiết điểm đón</Label>
-          <Input placeholder="Nhập chi tiết điểm đón" />
+          <Input v-model="objOrder.departure!.address_1" placeholder="Nhập chi tiết điểm đón" />
         </div>
         <div class="col-span-4">
           <div class="flex flex-col gap-2">
@@ -146,14 +150,11 @@
         </div>
         <div class="col-span-4">
           <Label>Chi tiết điểm trả</Label>
-          <Input placeholder="Nhập chi tiết điểm trả" />
+          <Input v-model="objOrder.destination!.address_1" placeholder="Nhập chi tiết điểm trả" />
         </div>
-        <div class="col-span-4">
-          <Label>Thu khách</Label>
-          <Input placeholder="Giá tiền cần thu" v-model="formattedPriceGuest" />
-        </div>
+
         <div class="col-span-12">
-          {{ orderCreater }}
+          {{ objOrder }}
         </div>
       </div>
       <DialogFooter class="p-6 pt-0">
@@ -183,41 +184,31 @@ const { $HappytripService, $AddressService, $OrderService } = useServices();
 
 const timeOut = ref();
 
-const objOrder = ref<Order>(
-  new Order({
-    customer: {},
-    partner: {},
-    departure: {
-      city: "",
-      district: "",
-    },
-    destination: {
-      city: "",
-      district: "",
-    },
-    date_of_destination: "",
-    id_service: "",
-    price_guest: 0,
-  })
-);
+const orderInstance = new Order({
+  customer: {},
+  partner: {},
+  departure: {
+    city: "",
+    district: "",
+  },
+  destination: {
+    city: "",
+    district: "",
+  },
+  date_of_destination: "",
+  id_service: "",
+  price_guest: 0,
+});
 
-const orderCreater = ref<Order>(
-  new Order({
-    customer: {},
-    partner: {},
-    departure: {
-      city: "",
-      district: "",
-    },
-    destination: {
-      city: "",
-      district: "",
-    },
-    date_of_destination: "",
-    id_service: "",
-    price_guest: 0,
-  })
-);
+const objOrder = ref<Order>({
+  ...orderInstance,
+} as Order);
+
+const orderCreater = ref<Order>({
+  ...orderInstance,
+} as Order);
+
+
 
 // Định dạng hiển thị tiền tệ VND
 const formattedPriceGuest = computed({
@@ -230,11 +221,14 @@ const formattedPriceGuest = computed({
       : "";
   },
   set: (value: string) => {
-    // Loại bỏ tất cả các ký tự không phải số
-    const numericValue = value.replace(/[^\d]/g, "");
-    objOrder.value.price_guest = numericValue
-      ? parseInt(numericValue).toString()
-      : "0";
+    clearTimeout(timeOut.value);
+    timeOut.value = setTimeout(() => {
+      // Chuyển đổi giá trị thành số nguyên
+      const numericValue = value.replace(/[^\d]/g, "");
+      objOrder.value.price_guest = numericValue
+        ? parseInt(numericValue).toString()
+        : "0";
+    }, 1000);
   },
 });
 
@@ -302,13 +296,12 @@ watch(
 
       const newOrder = await $OrderService.Preview(objPrev);
 
-      newOrder.customer = objOrder.value.customer;
-      newOrder.partner = objOrder.value.partner;
-
-      orderCreater.value = new Order({
-        ...newOrder
-      });
-      // console.log("objOrder.value", objOrder.value);
+      objOrder.value.price_guest = newOrder.price_guest;
+      objOrder.value.price_guest_after = newOrder.price_guest_after;
+      objOrder.value.price = newOrder.price;
+      objOrder.value.price_after = newOrder.price_after;
+      objOrder.value.net_profit = newOrder.net_profit;
+      objOrder.value.price_system = newOrder.price_system;
     }, 1000);
   },
   { deep: true }
