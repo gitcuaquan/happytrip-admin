@@ -1,5 +1,5 @@
 
-import type { IOrder, IOrderOverviewItem, Order, OrderFilter, OrderPreview } from "@/model/order";
+import type { IOrder, IOrderCreate, IOrderOverviewItem, Order, OrderFilter, OrderPreview } from "@/model/order";
 import { Service } from "./Service";
 import type { FilterOnParams } from "@/model/common";
 import type { RsData } from "@/model/interface";
@@ -26,7 +26,7 @@ export default class OrderService extends Service {
         });
     }
 
-    async Preview(data:OrderPreview) {
+    async Preview(data: IOrderCreate) {
         try {
             const url = this.URL_SERVICE_BASE + '/calc-order';
             const response = await this.$AuthFetch<Partial<Order>>(url, {
@@ -39,10 +39,24 @@ export default class OrderService extends Service {
             throw error;
         }
     }
+    async Create(data: Order) {
+        return new Promise<Order>(async (resolve, reject) => {
+            try {
+                const url = this.URL_SERVICE_BASE.concat('/by-ajax');
+                const response = await this.$AuthFetch<Order>(url, {
+                    method: 'POST',
+                    body: JSON.stringify(data)
+                });
+                resolve(response);
+            } catch (error: any) {
+                reject(error);
+            }
+        })
+    }
 
-    async list(params:FilterOnParams,filter:OrderFilter) {
+    async list(params: FilterOnParams, filter: OrderFilter) {
         try {
-            
+
             const url = this.URL_SERVICE_BASE + '/list';
             const data = await this.$AuthFetch<RsData<IOrder>>(url, {
                 method: 'POST',

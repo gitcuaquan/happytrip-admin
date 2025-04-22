@@ -185,7 +185,7 @@ class OrderPreview {
     departure_city?: string;
     destination_city?: string;
     price?: string;
-    price_guest?: string;
+    price_guest?: number;
     departure_dictrict?: string;
 
     destination_dictrict?: string;
@@ -261,7 +261,30 @@ class OrderFilter {
         Object.assign(this, initValue);
     }
 }
-
+interface IOrderCreate {
+    name_service?: string;
+    id_service?: string;
+    full_name?: string;
+    phone?: string;
+    date_of_destination?: string;
+    quantity?: number;
+    departure_city?: string;
+    departure_dictrict?: string;
+    departure_address_1?: string;
+    destination_city?: string;
+    destination_dictrict?: string;
+    destination_address_1?: string;
+    price?: number;
+    price_guest?: string;
+    price_system?: number;
+    price_after?: number;
+    price_guest_after?: number;
+    net_profit?: number;
+    note?: string;
+    partner_phone?: string;
+    distance?: number;
+    sub_fees?: ISubFeeOrder;
+}
 
 export {
     type IOrderOverviewItem,
@@ -285,5 +308,6 @@ export {
     Order,
     OrderFilter,
     OrderCancelItem,
-    OrderPreview
+    OrderPreview,
+    type IOrderCreate,
 };

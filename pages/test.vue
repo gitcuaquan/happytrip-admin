@@ -3,6 +3,8 @@
     <h3 class="mb-4 text-xl font-semibold">Mặt nạ biểu diễn tiền tệ</h3>
     
     <div class="space-y-4">
+      <ShareInputVnd v-model="a" />
+      {{ a }}
       <div>
         <abel class="block mb-2">Tiền VND (đơn vị: nghìn đồng):</abel>
         <Input 
@@ -34,6 +36,8 @@
 
 <script lang="ts" setup>
 import { ref, computed, watch } from 'vue'
+
+const a = ref(11231231312)
 
 const vndValue = ref('')
 const usdValue = ref('')
