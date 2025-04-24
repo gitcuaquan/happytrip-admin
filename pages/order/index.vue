@@ -16,7 +16,7 @@
       </Select>
     </div>
 
-    <Button @click="openShowAct = true" >
+    <Button @click="openShowAct = true">
       <FilePlus2 :size="30" />
       Tạo đơn
     </Button>
@@ -32,10 +32,22 @@
       v-model="params.page"
     />
   </template>
-  <OrderModalAct @hidden="openShowAct = false" v-if="openShowAct" @create="()=>{
-    getListOrder();
-    openShowAct = false;
-  }" />
+  <OrderModalAct
+    @hidden="
+      () => {
+        openShowAct = false;
+        resetAll();
+      }
+    "
+    v-if="openShowAct"
+    @create="
+      () => {
+        getListOrder();
+        openShowAct = false;
+        resetAll();
+      }
+    "
+  />
 </template>
 
 <script lang="ts" setup>
@@ -44,12 +56,28 @@ import type { RsData } from "@/model/interface";
 import { eOrderStatus, OrderFilter, type IOrder } from "@/model/order";
 import { addDays, format } from "date-fns";
 import { FolderDown, FilePlus2 } from "lucide-vue-next";
+
 useBreadcrum().setBreadcrum([
   { name: "Tổng quan", to: "/" },
   { name: "Quản lý đơn hàng", to: "/order" },
   { name: "Đơn đang đợi nhận" },
 ]);
+const { getActionType, resetAll } = useOrder();
 const { $OrderService } = useServices();
+
+const actionType = computed(() => {
+  return getActionType();
+});
+
+watch(
+  () => actionType.value,
+  (value) => {
+    if (value === "view") {
+      openShowAct.value = true;
+    }
+  },
+  { immediate: true }
+);
 
 const orderData = ref<RsData<IOrder>>();
 
@@ -73,10 +101,12 @@ const partnerStatus = [
     value: 1,
   },
 ];
-const open = ref<boolean>(false);
+
 const params = ref<FilterOnParams>({
   page: 1,
   limit: 50,
+  fields:
+    "id,order_code,city_diemden,city_diemdon,partner_id,partner_name,partner_phone,price,net_profit,price_system,creator_id,creator,created_at",
 });
 
 const filter = ref<OrderFilter>({

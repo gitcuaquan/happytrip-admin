@@ -262,6 +262,7 @@ class OrderFilter {
     }
 }
 interface IOrderCreate {
+    id?: string;
     name_service?: string;
     id_service?: string;
     full_name?: string;

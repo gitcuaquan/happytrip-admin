@@ -32,9 +32,11 @@
             </div>
             <div class="flex flex-col gap-2">
               <Label>Ngày đón</Label>
+              <!-- {{ orderCreater.date_of_destination }} -->
               <Input
                 v-model="orderCreater.date_of_destination"
                 required
+                 @update:model-value="previewOrder()"
                 type="datetime-local"
                 :min="new Date().toISOString().slice(0, 16)"
                 placeholder="Nhập ngày đón"
@@ -42,7 +44,11 @@
             </div>
             <div class="flex flex-col gap-2">
               <Label>Dịch vụ</Label>
-              <Select v-model="orderCreater.id_service" required>
+              <Select
+                @update:model-value="previewOrder()"
+                v-model="orderCreater.id_service"
+                required
+              >
                 <SelectTrigger>
                   <SelectValue placeholder="Chọn dịch vụ" />
                 </SelectTrigger>
@@ -59,7 +65,12 @@
             </div>
             <div class="flex flex-col gap-2">
               <Label>Thành Phố đón</Label>
-              <Select v-model="orderCreater.departure_city" required>
+
+              <Select
+                @update:model-value="previewOrder()"
+                v-model="orderCreater.departure_city"
+                required
+              >
                 <SelectTrigger>
                   <SelectValue placeholder="Chọn thành phố đón" />
                 </SelectTrigger>
@@ -67,7 +78,7 @@
                   <SelectItem
                     v-for="item in state.listCity"
                     :key="item.id"
-                    :value="item.name"
+                    :value="item.name.trim()"
                     >{{ item.name }}</SelectItem
                   >
                 </SelectContent>
@@ -76,6 +87,7 @@
             <div class="flex flex-col gap-2">
               <Label>Quận huyện đón</Label>
               <Select
+                @update:model-value="previewOrder()"
                 required
                 :disabled="!orderCreater.departure_city"
                 v-model="orderCreater.departure_dictrict"
@@ -103,7 +115,11 @@
             </div>
             <div>
               <Label>Thành phố trả</Label>
-              <Select v-model="orderCreater.destination_city" required>
+              <Select
+                @update:model-value="previewOrder()"
+                v-model="orderCreater.destination_city"
+                required
+              >
                 <SelectTrigger>
                   <SelectValue placeholder="Chọn thành phố trả" />
                 </SelectTrigger>
@@ -111,7 +127,7 @@
                   <SelectItem
                     v-for="item in state.listCity"
                     :key="item.id"
-                    :value="item.name"
+                    :value="item.name.trim()"
                     >{{ item.name }}</SelectItem
                   >
                 </SelectContent>
@@ -121,6 +137,7 @@
               <Label>Quận huyện trả</Label>
               <Select
                 required
+                @update:model-value="previewOrder()"
                 v-model="orderCreater.destination_dictrict"
                 :disabled="!orderCreater.destination_city"
               >
@@ -175,12 +192,12 @@
               </div>
               <table class="align-middle">
                 <tbody>
-                  <tr>
+                  <!-- <tr>
                     <td class="w-[150px]">Thu khách</td>
                     <td>
                       {{ formatCurrency(orderPriceInfo.price_guest) }}
                     </td>
-                  </tr>
+                  </tr> -->
                   <tr>
                     <td class="w-[150px]">Tài xế nhận</td>
                     <td>
@@ -219,7 +236,7 @@
               </table>
             </CardContent>
           </Card>
-          {{orderSelected}}
+          {{ orderSelected }}
         </div>
       </form>
       <DialogFooter class="p-6 pt-0">
@@ -243,16 +260,21 @@ import type { City, ResponeDistricts } from "@/model/address";
 import type { FilterOnParams } from "@/model/common";
 import type { IHappytripService } from "@/model/happytrip";
 import type { RsData } from "@/model/interface";
-import { Order, OrderPreview, type IOrderCreate } from "@/model/order";
-import { Textarea } from "@/components/ui/textarea";
+import type { IOrder } from "@/model/order";
+import { Order } from "@/model/order";
+import { type IOrderCreate } from "@/model/order";
 const emit = defineEmits(["hidden", "create"]);
 
 const { $HappytripService, $AddressService, $OrderService } = useServices();
 const { successToast, errorsToast } = useToast();
-const { getOrder } = useOrder();
+const { getOrder, getActionType, resetAll } = useOrder();
 
 const orderSelected = computed(() => {
   return getOrder();
+});
+
+const orderType = computed(() => {
+  return getActionType();
 });
 
 const timeOut = ref();
@@ -272,7 +294,7 @@ const loading = ref(false);
 // });
 
 const orderCreater = ref<IOrderCreate>({});
-
+const preview = ref(false);
 // Tạo một ref riêng để lưu thông tin giá từ API
 const orderPriceInfo = ref<IOrderCreate>({
   price: 0,
@@ -291,49 +313,160 @@ const state = reactive({
   loading: false,
   happytripData: {} as RsData<IHappytripService>,
   listCity: [] as City[],
-  citySelected: {
-    from: "",
-    to: "",
-  },
   detailCity: {
     from: {} as ResponeDistricts,
     to: {} as ResponeDistricts,
   },
 });
 
-onMounted(() => {
-  $AddressService
-    .listCity(params.value)
-    .then((res) => {
-      state.listCity = res;
-    })
-    .catch((error) => {
-      console.error("Error fetching city list:", error);
-    });
-  $HappytripService.getList().then((res) => {
-    state.happytripData = res;
-    orderCreater.value.id_service = res.data[0].id;
-  });
+onMounted(async () => {
+  await Promise.all([getAddress(), getService()]);
+  if (orderSelected.value.id) {
+    tranformOrder();
+  }
 });
 
-watch(
-  () => [
-    orderCreater.value.departure_city,
-    orderCreater.value.destination_city,
-    orderCreater.value.date_of_destination,
-    orderCreater.value.id_service,
-    orderCreater.value.departure_dictrict,
-    orderCreater.value.destination_dictrict,
-    orderCreater.value.price_guest,
-  ],
-  async () => {
-    previewOrder();
-  },
-  { deep: true, immediate: true }
-);
+function tranformOrder() {
+  preview.value = true;
+  orderCreater.value.date_of_destination = new Date(
+    orderSelected.value.date_of_destination as string
+  )
+    .toISOString()
+    .slice(0, 16);
+  orderCreater.value.id = orderSelected.value.id;
+  orderCreater.value.full_name = orderSelected.value.customer?.full_name;
+  orderCreater.value.phone = orderSelected.value.customer?.phone;
+  orderCreater.value.departure_city =
+    orderSelected.value.departure?.city?.trim();
+  orderCreater.value.departure_dictrict =
+    orderSelected.value.departure?.district?.trim();
+  orderCreater.value.destination_city =
+    orderSelected.value.destination?.city?.trim();
+  orderCreater.value.destination_dictrict =
+    orderSelected.value.destination?.district?.trim();
+  orderCreater.value.departure_address_1 =
+    orderSelected.value.departure?.address_1?.trim();
+  orderCreater.value.destination_address_1 =
+    orderSelected.value.destination?.address_1?.trim();
+  orderCreater.value.note = orderSelected.value.note?.trim();
+  orderCreater.value.id_service = orderSelected.value.id_service;
+
+  orderPriceInfo.value.price = orderSelected.value.price;
+  orderPriceInfo.value.price_guest = orderSelected.value.price_guest as string;
+  orderPriceInfo.value.net_profit = orderSelected.value.net_profit;
+  orderPriceInfo.value.price_system = orderSelected.value.price_system;
+  orderPriceInfo.value.price_guest_after =
+    orderSelected.value.price_guest_after;
+  orderPriceInfo.value.distance = orderSelected.value.distance;
+  orderPriceInfo.value.sub_fees = orderSelected.value.sub_fees;
+  orderCreater.value.quantity = orderSelected.value.quantity;
+
+  preview.value = false;
+}
+
+function revertOrder() {
+  const orderData: Order = new Order();
+
+  // Basic order information
+  orderData.id = orderCreater.value.id;
+  orderData.note = orderCreater.value.note;
+  orderData.id_service = orderCreater.value.id_service;
+  orderData.name_service = state.happytripData?.data?.find(
+    (service) => service.id === orderCreater.value.id_service
+  )?.name;
+  orderData.date_of_destination = orderCreater.value.date_of_destination;
+  orderData.quantity = orderCreater.value.quantity;
+
+  // Price information
+  orderData.price = orderPriceInfo.value.price;
+  orderData.price_guest = orderPriceInfo.value.price_guest;
+  orderData.net_profit = orderPriceInfo.value.net_profit;
+  orderData.price_system = orderPriceInfo.value.price_system;
+  orderData.price_guest_after = orderPriceInfo.value.price_guest_after;
+  orderData.price_after = orderPriceInfo.value.price_after;
+  orderData.distance = orderPriceInfo.value.distance;
+  orderData.sub_fees = orderPriceInfo.value.sub_fees;
+
+  // Address information
+  orderData.departure = {
+    city: orderCreater.value.departure_city,
+    district: orderCreater.value.departure_dictrict,
+    address_1: orderCreater.value.departure_address_1,
+  };
+
+  orderData.destination = {
+    city: orderCreater.value.destination_city,
+    district: orderCreater.value.destination_dictrict,
+    address_1: orderCreater.value.destination_address_1,
+  };
+
+  // Customer information
+  orderData.customer = {
+    full_name: orderCreater.value.full_name,
+    phone: orderCreater.value.phone,
+  };
+
+  // Preserve original data if it exists
+  if (orderSelected.value.id) {
+    orderData.short_id = orderSelected.value.short_id;
+    orderData.created = orderSelected.value.created;
+    orderData.status_type = orderSelected.value.status_type;
+    orderData.status_name = orderSelected.value.status_name;
+    orderData.total_transaction = orderSelected.value.total_transaction;
+    orderData.creator = orderSelected.value.creator;
+    orderData.partner = orderSelected.value.partner;
+  }
+
+  return orderData;
+}
+
+// watch(
+//   () => [
+//     orderCreater.value.departure_city,
+//     orderCreater.value.destination_city,
+//     orderCreater.value.date_of_destination,
+//     orderCreater.value.id_service,
+//     orderCreater.value.departure_dictrict,
+//     orderCreater.value.destination_dictrict,
+//     orderCreater.value.price_guest,
+//   ],
+//   async () => {
+//     if(!preview.value) {
+//       return;
+//     }
+//     previewOrder();
+//   },
+//   { deep: true }
+// );
 
 function changePrice(e: any) {
   orderCreater.value.price_guest = e;
+  previewOrder();
+}
+
+async function getAddress() {
+  try {
+    state.loading = true;
+    const res = await $AddressService.listCity(params.value);
+    state.listCity = res;
+  } catch (error) {
+    console.error("Error fetching address list:", error);
+  } finally {
+    state.loading = false;
+  }
+}
+
+async function getService() {
+  try {
+    state.loading = true;
+    const res = await $HappytripService.getList();
+    state.happytripData = res;
+    orderCreater.value.id_service = res.data[0].id;
+  } catch (error) {
+    console.error("Error fetching service list:", error);
+  } finally {
+    state.loading = false;
+  }
 }
 
 watchEffect(() => {
@@ -363,16 +496,18 @@ watchEffect(() => {
 
 async function handleSubmit() {
   try {
-    // chuyển price về object create
-    (orderCreater.value.price = orderPriceInfo.value.price),
-      (orderCreater.value.price_guest = orderPriceInfo.value.price_guest),
-      (orderCreater.value.net_profit = orderPriceInfo.value.net_profit),
-      (orderCreater.value.price_system = orderPriceInfo.value.price_system),
-      (orderCreater.value.price_guest_after =
-        orderPriceInfo.value.price_guest_after),
-      // Submit the form data
+    loading.value = true;
+    // Convert form data to Order format using the revertOrder function
+    const orderData = revertOrder();
+
+    // Submit the form data
+    if (!orderSelected.value.id) {
       await $OrderService.Create(orderCreater.value);
-    successToast("Tạo đơn thành công");
+      successToast("Tạo đơn thành công");
+    } else {
+      await $OrderService.Update(orderData);
+      successToast("Cập nhật đơn thành công");
+    }
     // đóng modal
     emit("create");
   } catch (error: any) {

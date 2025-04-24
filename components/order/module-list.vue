@@ -21,7 +21,7 @@
         </TableRow>
       </TableHeader>
       <TableBody>
-        <TableRow v-for="order in formattedOrders" :key="order.id">
+        <TableRow v-for="(order,index) in formattedOrders" :key="order.id">
           <!-- ID đơn -->
           <TableCell class="w-[10px]"> {{ order?.short_id }} </TableCell>
           <!-- Điểm đón -->
@@ -59,7 +59,7 @@
               <DropdownMenuContent class="me-5">
                 <DropdownMenuLabel>Hành động</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem @click="viewOrder(order as unknown as IOrder)">Xem chi tiết</DropdownMenuItem>
+                <DropdownMenuItem @click="viewOrder(props.orders[index] as unknown as IOrder)">Xem chi tiết</DropdownMenuItem>
                 <DropdownMenuItem>Chỉnh sửa đơn</DropdownMenuItem>
                 <DropdownMenuItem class="text-red-700">
                   Xóa bỏ đơn
