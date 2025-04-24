@@ -145,6 +145,10 @@
                 placeholder="Nhập chi tiết điểm trả"
               />
             </div>
+            <div class="col-span-2">
+              <Label>Ghi chú</Label>
+              <Input v-model="orderCreater.note" placeholder="Nhập ghi chú" />
+            </div>
           </div>
         </div>
         <div class="col-span-5 mt-5">
@@ -156,33 +160,56 @@
             </CardHeader>
             <CardContent class="px-3 flex flex-col gap-4">
               <div>
-                <Label>Thu khách ( không phụ thu)</Label>
-                <ShareInputVnd v-model="orderPriceInfo.price_guest" />
+                <Label>Giá đề xuất của hệ thống</Label>
+                <ShareInputVnd
+                  :model-value="orderPriceInfo.price_guest"
+                  @update:model-value="changePrice"
+                />
+              </div>
+              <div class="flex gap-2 items-center">
+                <hr class="w-full" />
+                <small class="text-nowrap"
+                  >Chi phí cho <b>{{ orderPriceInfo.distance }}</b> km</small
+                >
+                <hr class="w-full" />
               </div>
               <table class="align-middle">
                 <tbody>
                   <tr>
-                    <td><Label>Tài xế nhận </Label></td>
+                    <td class="w-[150px]">Thu khách</td>
+                    <td>
+                      {{ formatCurrency(orderPriceInfo.price_guest) }}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="w-[150px]">Tài xế nhận</td>
                     <td>
                       {{ formatCurrency(orderPriceInfo.price) }}
                     </td>
                   </tr>
                   <tr>
-                    <td><Label>Phí sàn</Label></td>
+                    <td>Phí sàn</td>
                     <td>
                       {{ formatCurrency(orderPriceInfo.price_system) }}
                     </td>
                   </tr>
                   <tr>
-                    <td><Label>Hoa hồng</Label></td>
+                    <td>Hoa hồng</td>
                     <td>
                       {{ formatCurrency(orderPriceInfo.net_profit) }}
                     </td>
                   </tr>
                   <tr>
+                    <td>Phụ thu</td>
                     <td>
-                      <Label>Thu khách</Label> <br />
-                      <small> (bao gồm phụ thu)</small>
+                      {{
+                        formatCurrency(orderPriceInfo.sub_fees?.sub_fee_price)
+                      }}
+                    </td>
+                  </tr>
+                  <tr class="border-t border-t-primary">
+                    <td>
+                      <Label>Tổng</Label>
                     </td>
                     <td>
                       {{ formatCurrency(orderPriceInfo.price_guest_after) }}
@@ -192,6 +219,7 @@
               </table>
             </CardContent>
           </Card>
+          {{orderSelected}}
         </div>
       </form>
       <DialogFooter class="p-6 pt-0">
@@ -216,27 +244,34 @@ import type { FilterOnParams } from "@/model/common";
 import type { IHappytripService } from "@/model/happytrip";
 import type { RsData } from "@/model/interface";
 import { Order, OrderPreview, type IOrderCreate } from "@/model/order";
-import { toast } from "vue-sonner";
-const emit = defineEmits(["hidden"]);
+import { Textarea } from "@/components/ui/textarea";
+const emit = defineEmits(["hidden", "create"]);
 
 const { $HappytripService, $AddressService, $OrderService } = useServices();
+const { successToast, errorsToast } = useToast();
+const { getOrder } = useOrder();
+
+const orderSelected = computed(() => {
+  return getOrder();
+});
 
 const timeOut = ref();
 const loading = ref(false);
+// const orderCreater = ref<IOrderCreate>({
+//   full_name: "Tạ Quân",
+//   phone: "0982135950",
+//   date_of_destination: "2025-04-23T20:39",
+//   id_service: "66947d0917482239472b9807",
+//   departure_city: "Bà Rịa - Vũng Tàu",
+//   departure_dictrict: "TP. Bà Rịa",
+//   destination_city: "Hồ Chí Minh",
+//   destination_dictrict: "Quận 3",
+//   quantity: 1,
+//   departure_address_1: "Đường số 1",
+//   destination_address_1: "Đường số 2",
+// });
 
-const orderCreater = ref<IOrderCreate>({
-  full_name: "Tạ Quân",
-  phone: "0982135950",
-  date_of_destination: "2025-04-23T20:39",
-  id_service: "66947d0917482239472b9807",
-  departure_city: "Bà Rịa - Vũng Tàu",
-  departure_dictrict: "TP. Bà Rịa",
-  destination_city: "Hồ Chí Minh",
-  destination_dictrict: "Quận 3",
-  quantity: 1,
-  departure_address_1: "Đường số 1",
-  destination_address_1: "Đường số 2",
-});
+const orderCreater = ref<IOrderCreate>({});
 
 // Tạo một ref riêng để lưu thông tin giá từ API
 const orderPriceInfo = ref<IOrderCreate>({
@@ -244,6 +279,7 @@ const orderPriceInfo = ref<IOrderCreate>({
   price_guest: "0",
   net_profit: 0,
   price_system: 0,
+  distance: 0,
   price_guest_after: 0,
 });
 
@@ -281,12 +317,24 @@ onMounted(() => {
 });
 
 watch(
-  () => orderCreater.value,
+  () => [
+    orderCreater.value.departure_city,
+    orderCreater.value.destination_city,
+    orderCreater.value.date_of_destination,
+    orderCreater.value.id_service,
+    orderCreater.value.departure_dictrict,
+    orderCreater.value.destination_dictrict,
+    orderCreater.value.price_guest,
+  ],
   async () => {
     previewOrder();
   },
   { deep: true, immediate: true }
 );
+
+function changePrice(e: any) {
+  orderCreater.value.price_guest = e;
+}
 
 watchEffect(() => {
   if (orderCreater.value.departure_city) {
@@ -315,15 +363,20 @@ watchEffect(() => {
 
 async function handleSubmit() {
   try {
-    // Submit the form data
-    await $OrderService.Create(orderCreater.value);
-    toast.success("Tạo đơn thành công",{
-      description: "Đơn hàng đã được tạo thành công.",
-    });
+    // chuyển price về object create
+    (orderCreater.value.price = orderPriceInfo.value.price),
+      (orderCreater.value.price_guest = orderPriceInfo.value.price_guest),
+      (orderCreater.value.net_profit = orderPriceInfo.value.net_profit),
+      (orderCreater.value.price_system = orderPriceInfo.value.price_system),
+      (orderCreater.value.price_guest_after =
+        orderPriceInfo.value.price_guest_after),
+      // Submit the form data
+      await $OrderService.Create(orderCreater.value);
+    successToast("Tạo đơn thành công");
+    // đóng modal
+    emit("create");
   } catch (error: any) {
-    toast.error("Tạo đơn thất bại", {
-      description: error.data || "Đã xảy ra lỗi không xác định.",
-    });
+    errorsToast("Tạo đơn thất bại");
   } finally {
     loading.value = false;
   }
@@ -354,6 +407,8 @@ function previewOrder() {
         net_profit: newOrder.net_profit,
         price_system: newOrder.price_system,
         price_guest_after: newOrder.price_guest_after,
+        distance: newOrder.distance,
+        sub_fees: newOrder.sub_fees,
       };
     } catch (error) {
       console.error("Error during order preview:", error);

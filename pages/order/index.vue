@@ -15,20 +15,8 @@
         </SelectContent>
       </Select>
     </div>
-    <!-- Tạo file export -->
-    <TooltipProvider>
-      <Tooltip>
-        <TooltipTrigger as-child>
-          <Button size="sm" class="ms-auto" variant="outline">
-            <FolderDown :size="30" />
-          </Button>
-        </TooltipTrigger>
-        <TooltipContent>
-          <p>Xuất File</p>
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
-    <Button @click="openShowAct = true" size="sm">
+
+    <Button @click="openShowAct = true" >
       <FilePlus2 :size="30" />
       Tạo đơn
     </Button>
@@ -44,7 +32,10 @@
       v-model="params.page"
     />
   </template>
-  <OrderModalAct @hidden="openShowAct = false" v-if="openShowAct" />
+  <OrderModalAct @hidden="openShowAct = false" v-if="openShowAct" @create="()=>{
+    getListOrder();
+    openShowAct = false;
+  }" />
 </template>
 
 <script lang="ts" setup>
