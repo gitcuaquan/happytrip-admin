@@ -15,14 +15,14 @@
         </SelectContent>
       </Select>
     </div>
-
+    
     <Button @click="openShowAct = true">
       <FilePlus2 :size="30" />
       Tạo đơn
     </Button>
     <!-- Tạo đơn -->
   </OrderModuleFilter>
-  <OrderModuleList :loading="loading" :orders="orderData?.data" />
+  <OrderModuleList @delete-order="getListOrder()" :loading="loading" :orders="orderData?.data" />
   <template
     v-if="orderData && orderData.pagination && orderData.pagination.count > 0"
   >
@@ -72,7 +72,7 @@ const actionType = computed(() => {
 watch(
   () => actionType.value,
   (value) => {
-    if (value === "view") {
+    if (value === "view" || value === "edit") {
       openShowAct.value = true;
     }
   },

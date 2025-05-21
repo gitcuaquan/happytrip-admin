@@ -21,7 +21,7 @@
         </TableRow>
       </TableHeader>
       <TableBody>
-        <TableRow v-for="(order,index) in formattedOrders" :key="order.id">
+        <TableRow v-for="(order, index) in formattedOrders" :key="order.id">
           <!-- ID đơn -->
           <TableCell class="w-[10px]"> {{ order?.short_id }} </TableCell>
           <!-- Điểm đón -->
@@ -50,22 +50,35 @@
           <TableCell> {{ order.created }} </TableCell>
           <!-- Cột action -->
           <TableCell class="w-[10px]">
-            <DropdownMenu>
-              <DropdownMenuTrigger>
-                <Button :size="'sm'" variant="ghost" >
-                  <Ellipsis :size="16" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent class="me-5">
-                <DropdownMenuLabel>Hành động</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem @click="viewOrder(props.orders[index] as unknown as IOrder)">Xem chi tiết</DropdownMenuItem>
-                <DropdownMenuItem>Chỉnh sửa đơn</DropdownMenuItem>
-                <DropdownMenuItem class="text-red-700">
-                  Xóa bỏ đơn
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <slot name="action">
+              <DropdownMenu>
+                <DropdownMenuTrigger>
+                  <Button :size="'sm'" variant="ghost">
+                    <Ellipsis :size="16" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent class="me-5">
+                  <DropdownMenuLabel>Hành động</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    @click="viewOrder(props.orders[index] as unknown as IOrder)"
+                    >Xem chi tiết</DropdownMenuItem
+                  >
+                  <DropdownMenuItem
+                    @click="editOrder(props.orders[index] as unknown as IOrder)"
+                    >Chỉnh sửa đơn</DropdownMenuItem
+                  >
+                  <DropdownMenuItem
+                    @click="
+                      deleteOrder(props.orders[index] as unknown as IOrder)
+                    "
+                    class="text-red-700"
+                  >
+                    Xóa bỏ đơn
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </slot>
           </TableCell>
         </TableRow>
       </TableBody>
@@ -89,11 +102,28 @@ interface IProps {
   loading?: boolean;
   orders?: IOrder[];
 }
-const { viewOrder } = useOrder();
+const { viewOrder, editOrder } = useOrder();
+const { $OrderService } = useServices();
 const props = withDefaults(defineProps<IProps>(), {
   loading: false,
   orders: (): IOrder[] => [],
 });
+const emit = defineEmits<{
+  (e: "deleteOrder", order: IOrder): void;
+}>();
+
+async function deleteOrder(order: IOrder) {
+  if (!confirm("Bạn có chắc chắn muốn xóa đơn hàng này không?")) {
+    return;
+  }
+  try {
+    await $OrderService.Delete(order.id!);
+    useToast().successToast("Xóa đơn hàng thành công");
+    emit("deleteOrder", order);
+  } catch (error) {
+    useToast().errorsToast("Xóa đơn hàng thất bại");
+  }
+}
 
 const formattedOrders = computed(() => {
   return props.orders.map((order) => ({
@@ -121,8 +151,6 @@ const formattedOrders = computed(() => {
     }).format(order.net_profit!),
   }));
 });
-
-
 </script>
 
 <style></style>

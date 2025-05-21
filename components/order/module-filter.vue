@@ -139,8 +139,8 @@ const state = reactive({
 });
 
 const handleUpdate = (dates: { start: string; end: string }) => {
-  props.filter.from_date_of_destination = startOfDay(dates.start);
-  props.filter.to_date_of_destination = endOfDay(dates.end);
+  props.filter.from_date_of_destination = startOfDay(dates.start).toISOString();
+  props.filter.to_date_of_destination = endOfDay(dates.end).toISOString();
 };
 
 onMounted(() => {

@@ -36,7 +36,7 @@
               <Input
                 v-model="orderCreater.date_of_destination"
                 required
-                 @update:model-value="previewOrder()"
+                @update:model-value="previewOrder()"
                 type="datetime-local"
                 :min="new Date().toISOString().slice(0, 16)"
                 placeholder="Nhập ngày đón"
@@ -192,12 +192,6 @@
               </div>
               <table class="align-middle">
                 <tbody>
-                  <!-- <tr>
-                    <td class="w-[150px]">Thu khách</td>
-                    <td>
-                      {{ formatCurrency(orderPriceInfo.price_guest) }}
-                    </td>
-                  </tr> -->
                   <tr>
                     <td class="w-[150px]">Tài xế nhận</td>
                     <td>
@@ -226,7 +220,7 @@
                   </tr>
                   <tr class="border-t border-t-primary">
                     <td>
-                      <Label>Tổng</Label>
+                      <Label>Tổng Khách</Label>
                     </td>
                     <td>
                       {{ formatCurrency(orderPriceInfo.price_guest_after) }}
@@ -236,12 +230,11 @@
               </table>
             </CardContent>
           </Card>
-          {{ orderSelected }}
         </div>
       </form>
-      <DialogFooter class="p-6 pt-0">
+      <DialogFooter v-if="orderType != 'view'" class="p-6 pt-0">
         <Button :loading="loading" type="submit" form="act-form">
-          Tạo đơn
+          {{ orderSelected.id ? "Cập nhật đơn" : "Tạo đơn mới" }}
         </Button>
       </DialogFooter>
     </DialogContent>
@@ -260,9 +253,9 @@ import type { City, ResponeDistricts } from "@/model/address";
 import type { FilterOnParams } from "@/model/common";
 import type { IHappytripService } from "@/model/happytrip";
 import type { RsData } from "@/model/interface";
-import type { IOrder } from "@/model/order";
 import { Order } from "@/model/order";
 import { type IOrderCreate } from "@/model/order";
+
 const emit = defineEmits(["hidden", "create"]);
 
 const { $HappytripService, $AddressService, $OrderService } = useServices();
@@ -279,22 +272,20 @@ const orderType = computed(() => {
 
 const timeOut = ref();
 const loading = ref(false);
-// const orderCreater = ref<IOrderCreate>({
-//   full_name: "Tạ Quân",
-//   phone: "0982135950",
-//   date_of_destination: "2025-04-23T20:39",
-//   id_service: "66947d0917482239472b9807",
-//   departure_city: "Bà Rịa - Vũng Tàu",
-//   departure_dictrict: "TP. Bà Rịa",
-//   destination_city: "Hồ Chí Minh",
-//   destination_dictrict: "Quận 3",
-//   quantity: 1,
-//   departure_address_1: "Đường số 1",
-//   destination_address_1: "Đường số 2",
-// });
+const orderCreater = ref<IOrderCreate>({
+  full_name: "Tạ Quân",
+  phone: "0982135950",
+  date_of_destination: "2025-04-23T20:39",
+  id_service: "66947d0917482239472b9807",
+  departure_city: "Bà Rịa - Vũng Tàu",
+  departure_dictrict: "TP. Bà Rịa",
+  destination_city: "Hồ Chí Minh",
+  destination_dictrict: "Quận 3",
+  quantity: 1,
+  departure_address_1: "Đường số 1",
+  destination_address_1: "Đường số 2",
+});
 
-const orderCreater = ref<IOrderCreate>({});
-const preview = ref(false);
 // Tạo một ref riêng để lưu thông tin giá từ API
 const orderPriceInfo = ref<IOrderCreate>({
   price: 0,
@@ -327,7 +318,6 @@ onMounted(async () => {
 });
 
 function tranformOrder() {
-  preview.value = true;
   orderCreater.value.date_of_destination = new Date(
     orderSelected.value.date_of_destination as string
   )
@@ -360,8 +350,6 @@ function tranformOrder() {
   orderPriceInfo.value.distance = orderSelected.value.distance;
   orderPriceInfo.value.sub_fees = orderSelected.value.sub_fees;
   orderCreater.value.quantity = orderSelected.value.quantity;
-
-  preview.value = false;
 }
 
 function revertOrder() {
@@ -419,25 +407,6 @@ function revertOrder() {
 
   return orderData;
 }
-
-// watch(
-//   () => [
-//     orderCreater.value.departure_city,
-//     orderCreater.value.destination_city,
-//     orderCreater.value.date_of_destination,
-//     orderCreater.value.id_service,
-//     orderCreater.value.departure_dictrict,
-//     orderCreater.value.destination_dictrict,
-//     orderCreater.value.price_guest,
-//   ],
-//   async () => {
-//     if(!preview.value) {
-//       return;
-//     }
-//     previewOrder();
-//   },
-//   { deep: true }
-// );
 
 function changePrice(e: any) {
   orderCreater.value.price_guest = e;
@@ -499,9 +468,18 @@ async function handleSubmit() {
     loading.value = true;
     // Convert form data to Order format using the revertOrder function
     const orderData = revertOrder();
-
     // Submit the form data
     if (!orderSelected.value.id) {
+      // map orderPriceInfo.value vào orderCreater
+      orderCreater.value.price_guest = orderPriceInfo.value.price_guest;
+      orderCreater.value.price = orderPriceInfo.value.price;
+      orderCreater.value.price_system = orderPriceInfo.value.price_system;
+      orderCreater.value.price_after = orderPriceInfo.value.price_after;
+      orderCreater.value.price_guest_after =
+        orderPriceInfo.value.price_guest_after;
+      orderCreater.value.distance = orderPriceInfo.value.distance;
+      orderCreater.value.net_profit = orderPriceInfo.value.net_profit;
+
       await $OrderService.Create(orderCreater.value);
       successToast("Tạo đơn thành công");
     } else {
@@ -518,6 +496,7 @@ async function handleSubmit() {
 }
 
 function previewOrder() {
+  if (orderType.value == "view") return;
   clearTimeout(timeOut.value);
   timeOut.value = setTimeout(async () => {
     // check xem có đủ để preview không

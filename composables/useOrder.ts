@@ -16,10 +16,17 @@ export const useOrder = () => {
       console.error("Error fetching order details:", error);
     }
   }
-  const editOrder = (order: IOrder) => {
-    orderSelect.value = order;
-    actionType.value = 'edit';
+  const editOrder = async (order: IOrder) => {
+    try {
+      const orderDetails = await $OrderService.Detail(order.id!);
+      orderSelect.value = orderDetails;
+      actionType.value = 'edit';
+    } catch (error) {
+      console.error("Error fetching order details:", error);
+    }
   }
+
+
   const getActionType = () => {
     return actionType.value;
   }

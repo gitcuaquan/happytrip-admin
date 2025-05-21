@@ -95,6 +95,19 @@ export default class OrderService extends Service {
             }
         })
     }
+    Delete(id: string) {
+        return new Promise<Order>(async (resolve, reject) => {
+            try {
+                const url = this.URL_SERVICE_BASE + '/' + id;
+                const response = await this.$AuthFetch<Order>(url, {
+                    method: 'DELETE'
+                });
+                resolve(response);
+            } catch (error) {
+                reject(error);
+            }
+        })
+    }
     async list(params: FilterOnParams, filter: OrderFilter) {
         try {
 
